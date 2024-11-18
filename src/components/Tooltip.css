@@ -1,0 +1,18 @@
+/* Tooltip.css */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: fixed;
+  background-color: rgb(55 65 81);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  max-width: 400px;
+  word-break: break-all;
+  z-index: 1000;
+  font-family: ui-monospace, monospace;
+}
