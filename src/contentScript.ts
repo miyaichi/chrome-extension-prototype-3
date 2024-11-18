@@ -6,6 +6,7 @@ import {
 } from "./lib/connectionManager";
 import {
   ElementInfo,
+  ElementTreeNode,
   SelectElementPayload,
   SelectionModePayload,
 } from "./types/domSelection";
@@ -72,6 +73,32 @@ const getElementStartTag = (element: HTMLElement): string => {
   return clone.outerHTML.split(">")[0] + ">";
 };
 
+// Helper function to build element tree
+const buildElementTree = (element: HTMLElement, currentPath: number[] = []): ElementTreeNode => {
+  const children = Array.from(element.children).map((child, index) => {
+    const childPath = [...currentPath, index];
+    return buildElementTree(child as HTMLElement, childPath);
+  });
+
+  const node: ElementTreeNode = {
+    tag: getElementStartTag(element),
+    children,
+    path: currentPath
+  };
+
+  const textContent = Array.from(element.childNodes)
+    .filter(node => node.nodeType === Node.TEXT_NODE)
+    .map(node => node.textContent?.trim())
+    .filter(text => text)
+    .join(' ');
+
+  if (textContent) {
+    node.text = textContent;
+  }
+
+  return node;
+};
+
 // Style management functions
 const saveElementStyle = (element: HTMLElement): void => {
   if (styleMap.has(currentTabId)) {
@@ -127,10 +154,14 @@ const handleElementClick = (event: MouseEvent): void => {
   event.preventDefault();
   event.stopPropagation();
 
+  const path = getElementPath(element);
+  const elementTree = buildElementTree(element, path);
+
   // Save element info
   const elementInfo: ElementInfo = {
     startTag: getElementStartTag(element),
-    path: getElementPath(element),
+    path,
+    tree: elementTree,
   };
 
   // Save element style and apply highlight
