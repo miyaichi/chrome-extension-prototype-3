@@ -81,7 +81,7 @@ const buildElementTree = (element: HTMLElement, currentPath: number[] = []): Ele
   });
 
   const node: ElementTreeNode = {
-    tag: getElementStartTag(element),
+    startTag: getElementStartTag(element),
     children,
     path: currentPath
   };
@@ -161,7 +161,7 @@ const handleElementClick = (event: MouseEvent): void => {
   const elementInfo: ElementInfo = {
     startTag: getElementStartTag(element),
     path,
-    tree: elementTree,
+    children: elementTree,
   };
 
   // Save element style and apply highlight

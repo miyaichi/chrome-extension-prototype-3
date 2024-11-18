@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useConnectionManager } from "../lib/connectionManager";
 import "../styles/common.css";
-import { DOM_SELECTION_EVENTS, ElementInfo } from "../types/domSelection";
+import {
+  DOM_SELECTION_EVENTS,
+  ElementInfo,
+  ElementTreeNode,
+} from "../types/domSelection";
 import "./DOMSelector.css";
+import DOMTreeView from "./DOMTreeView";
 
 export const DOMSelector: React.FC = () => {
   const [selectedElement, setSelectedElement] = useState<ElementInfo | null>(
     null,
   );
-  const { subscribe } = useConnectionManager();
+  const { subscribe, sendMessage } = useConnectionManager();
+
+  const handleElementSelect = (node: ElementTreeNode) => {
+    const elementInfo = {
+      startTag: node.startTag,
+      path: node.path,
+      tree: node.children.length > 0 ? node.children : undefined,
+    };
+    sendMessage(DOM_SELECTION_EVENTS.SELECT_ELEMENT, { elementInfo });
+  };
 
   useEffect(() => {
     // Subscribe to element selection
@@ -42,11 +56,19 @@ export const DOMSelector: React.FC = () => {
       </div>
       <div className="card-content">
         {selectedElement && (
-          <div className="selected-element-info">
-            <h3>Selected Element:</h3>
-            <div>Start Tag: {selectedElement.startTag}</div>
-            <div>Path: {selectedElement.path.join(" > ")}</div>
-          </div>
+          <>
+            <div className="selected-element-info">
+              <h3>Selected Element:</h3>
+              <div>Path: {selectedElement.path.join(" > ")}</div>
+              <div>Start Tag: {selectedElement.startTag}</div>
+            </div>
+            {selectedElement.children && (
+              <DOMTreeView
+                elementInfo={selectedElement}
+                onSelect={handleElementSelect}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

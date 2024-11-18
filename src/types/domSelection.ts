@@ -3,7 +3,7 @@
 /** Represents a node in the DOM element tree structure */
 export interface ElementTreeNode {
   /** HTML start tag of the element */
-  tag: string;
+  startTag: string;
   /** Child nodes in the element tree */
   children: ElementTreeNode[];
   /** Array of indices representing the path from root to this element */
@@ -18,8 +18,8 @@ export interface ElementInfo {
   startTag: string;
   /** Array of indices representing the path from root to selected element */
   path: number[];
-  /** Complete tree structure starting from the selected element */
-  tree: ElementTreeNode;
+  /** Chiled nodes in the element tree **/
+  children: ElementTreeNode;
 }
 
 /** Payload for element selection events */
