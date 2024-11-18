@@ -1,8 +1,8 @@
 // src/components/SettingsPanel.tsx
-import React from 'react';
-import { LogLevel, useSettings } from '../lib/settings';
-import '../styles/common.css';
-import './SettingsPanel.css';
+import React from "react";
+import { LogLevel, useSettings } from "../lib/settings";
+import "../styles/common.css";
+import "./SettingsPanel.css";
 
 export const SettingsPanel: React.FC = () => {
   const { settings, updateSettings, loading, error } = useSettings();
@@ -26,9 +26,7 @@ export const SettingsPanel: React.FC = () => {
         <div className="card-header">
           <h2 className="card-title">Settings</h2>
         </div>
-        <div className="card-content loading-message">
-          Loading settings...
-        </div>
+        <div className="card-content loading-message">Loading settings...</div>
       </div>
     );
   }
@@ -43,7 +41,9 @@ export const SettingsPanel: React.FC = () => {
           <label>Log Level</label>
           <select
             value={settings.logLevel}
-            onChange={(e) => updateSettings({ logLevel: e.target.value as LogLevel })}
+            onChange={(e) =>
+              updateSettings({ logLevel: e.target.value as LogLevel })
+            }
           >
             <option value="error">Error</option>
             <option value="warn">Warning</option>
