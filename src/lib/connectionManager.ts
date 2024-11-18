@@ -4,6 +4,7 @@ import { loadSettings } from './settings';
 
 export type MessageType = 
   | 'SIDE_PANEL_READY'
+  | 'SIDE_PANEL_CLOSED'
   | 'CONTENT_READY'
   | 'TAB_ACTIVATED'
   | 'TOGGLE_SELECTION_MODE'

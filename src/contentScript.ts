@@ -127,13 +127,13 @@ const handleElementClick = (event: MouseEvent): void => {
   event.preventDefault();
   event.stopPropagation();
   
-  // 要素情報を取得
+  // Save element info
   const elementInfo: ElementInfo = {
     startTag: getElementStartTag(element),
     path: getElementPath(element)
   };
   
-  // スタイルを適用
+  // Save element style and apply highlight
   saveElementStyle(element);
   applyHighlightStyle(element);
   
@@ -163,9 +163,6 @@ subscribe('SELECT_ELEMENT', (message: Message<SelectElementPayload>) => {
 subscribe('CLEAR_SELECTION', () => {
   restoreElementStyle();
 });
-
-// Initialize
-document.addEventListener('click', handleElementClick, true);
 
 // Initialize event listeners
 document.addEventListener('click', handleElementClick, true);

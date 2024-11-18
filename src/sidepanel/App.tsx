@@ -1,6 +1,6 @@
 // src/sidepanel/App.tsx
 import { Settings } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DOMSelector } from '../components/DOMSelector';
 import { SettingsPanel } from '../components/SettingsPanel';
 import { TagInjection } from '../components/TagInjection';
@@ -13,6 +13,41 @@ export const App = () => {
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const { sendMessage } = useConnectionManager();
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        handlePanelClose();
+      }
+    };
+
+    const handleUnload = () => {
+      handlePanelClose();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('unload', handleUnload);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('unload', handleUnload);
+    };
+  }, []);
+
+  const handlePanelClose = () => {
+    if (isSelectionMode) {
+      setIsSelectionMode(false);
+      sendMessage('TOGGLE_SELECTION_MODE', { enabled: false });
+    }
+
+    if (showSettings) {
+      setShowSettings(false);
+    }
+
+    sendMessage('SIDE_PANEL_CLOSED', {
+      timestamp: Date.now()
+    });
+  };
 
   const toggleSelectionMode = () => {
     const newMode = !isSelectionMode;
