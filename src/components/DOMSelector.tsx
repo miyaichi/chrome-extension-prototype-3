@@ -3,7 +3,7 @@ import { useConnectionManager } from "../lib/connectionManager";
 import "../styles/common.css";
 import { DOM_SELECTION_EVENTS, ElementInfo } from "../types/domSelection";
 import "./DOMSelector.css";
-import DOMTreeView from "./DOMTreeView";
+import { DOMTreeView } from "./DOMTreeView";
 
 export const DOMSelector: React.FC = () => {
   const [selectedElement, setSelectedElement] = useState<ElementInfo | null>(
