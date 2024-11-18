@@ -15,10 +15,6 @@ export const DOMSelector: React.FC = () => {
     const unsubscribeSelection = subscribe(
       DOM_SELECTION_EVENTS.ELEMENT_SELECTED,
       (message: { payload: { elementInfo: ElementInfo } }) => {
-        console.log(
-          "[DOMSelector] Element selected:",
-          message.payload.elementInfo,
-        );
         const elementInfo = message.payload.elementInfo;
         setSelectedElement(elementInfo);
       },
@@ -28,7 +24,6 @@ export const DOMSelector: React.FC = () => {
     const unsubscribeUnselection = subscribe(
       DOM_SELECTION_EVENTS.ELEMENT_UNSELECTED,
       () => {
-        console.log("[DOMSelector] Clearing selection");
         setSelectedElement(null);
       },
     );
