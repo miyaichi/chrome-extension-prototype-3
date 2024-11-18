@@ -6,6 +6,10 @@ export type MessageType =
   | 'SIDE_PANEL_READY'
   | 'CONTENT_READY'
   | 'TAB_ACTIVATED'
+  | 'TOGGLE_SELECTION_MODE'
+  | 'ELEMENT_SELECTED'
+  | 'SELECT_ELEMENT'
+  | 'CLEAR_SELECTION'
   | 'DEBUG';  // Special message type for debugging purposes - handlers will receive all messages for logging/monitoring
 
 export type Context = 'content' | 'background' | 'sidepanel';
