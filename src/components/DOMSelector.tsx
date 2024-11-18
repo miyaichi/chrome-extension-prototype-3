@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useConnectionManager } from "../lib/connectionManager";
 import "../styles/common.css";
-import {
-  DOM_SELECTION_EVENTS,
-  ElementInfo,
-  ElementTreeNode,
-} from "../types/domSelection";
+import { DOM_SELECTION_EVENTS, ElementInfo } from "../types/domSelection";
 import "./DOMSelector.css";
 import DOMTreeView from "./DOMTreeView";
 
@@ -15,7 +11,7 @@ export const DOMSelector: React.FC = () => {
   );
   const { subscribe, sendMessage } = useConnectionManager();
 
-  const handleElementSelect = (node: ElementTreeNode) => {
+  const handleElementSelect = (node: ElementInfo) => {
     const elementInfo = {
       startTag: node.startTag,
       path: node.path,

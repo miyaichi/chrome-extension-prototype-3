@@ -1,13 +1,13 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
 import React, { useState } from "react";
-import { ElementInfo, ElementTreeNode } from "../types/domSelection";
+import { ElementInfo } from "../types/domSelection";
 import { truncateStartTag } from "../utils/domSelection";
 import "./DOMTreeView.css";
 import { Tooltip } from "./Tooltip";
 
 interface Props {
   elementInfo: ElementInfo;
-  onSelect?: (node: ElementTreeNode) => void;
+  onSelect?: (node: ElementInfo) => void;
 }
 
 const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
@@ -19,7 +19,7 @@ const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
     );
   };
 
-  const renderNode = (node: ElementTreeNode, parentPath = "") => {
+  const renderNode = (node: ElementInfo, parentPath = "") => {
     const currentPath = parentPath
       ? `${parentPath}-${node.path.join(".")}`
       : node.path.join(".");
@@ -59,7 +59,9 @@ const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
   };
 
   return (
-    <div className="tree-container">{renderNode(elementInfo.children)}</div>
+    <div className="tree-container">
+      {elementInfo.children.map((child) => renderNode(child))}
+    </div>
   );
 };
 
