@@ -41,3 +41,17 @@
 .components-container > *:not(:first-child) {
   margin-top: 16px;
 }
+
+.text-button {
+  background: none;
+  border: 2px solid blue;
+  border-radius: 8px;
+  color: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 8px 16px;
+}
+
+.text-button:hover {
+  border-color: darkblue;
+}

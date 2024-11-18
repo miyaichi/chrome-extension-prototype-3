@@ -61,7 +61,7 @@ export const App = () => {
         <div className="app-header">
           <button
             onClick={toggleSelectionMode}
-            className={`settings-button 'active'`}
+            className="text-button"
           >
             {isSelectionMode ? 'Disable Selection Mode' : 'Enable Selection Mode'}
           </button>
