@@ -10,7 +10,7 @@ interface Props {
   onSelect?: (node: ElementInfo) => void;
 }
 
-const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
+export const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
 
   const toggleNode = (path: string) => {
@@ -64,5 +64,3 @@ const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
     </div>
   );
 };
-
-export default DOMTreeView;
