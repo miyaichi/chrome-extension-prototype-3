@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useConnectionManager } from "../lib/connectionManager";
 import "../styles/common.css";
-import { DOM_SELECTION_EVENTS, ElementInfo, SelectElementPayload } from "../types/domSelection";
+import {
+  DOM_SELECTION_EVENTS,
+  ElementInfo,
+  SelectElementPayload,
+} from "../types/domSelection";
 import "./DOMSelector.css";
 import { DOMTreeView } from "./DOMTreeView";
 
@@ -12,7 +16,9 @@ export const DOMSelector: React.FC = () => {
   const { subscribe, sendMessage } = useConnectionManager();
 
   const handleElementSelect = (elementInfo: ElementInfo) => {
-    sendMessage<SelectElementPayload>(DOM_SELECTION_EVENTS.SELECT_ELEMENT, { elementInfo });
+    sendMessage<SelectElementPayload>(DOM_SELECTION_EVENTS.SELECT_ELEMENT, {
+      elementInfo,
+    });
   };
 
   useEffect(() => {
@@ -52,12 +58,10 @@ export const DOMSelector: React.FC = () => {
               <h3>Selected Element:</h3>
               <div>Path: {selectedElement.path.join(" > ")}</div>
             </div>
-            {selectedElement.children && (
-              <DOMTreeView
-                elementInfo={selectedElement}
-                onSelect={handleElementSelect}
-              />
-            )}
+            <DOMTreeView
+              elementInfo={selectedElement}
+              onSelect={handleElementSelect}
+            />
           </>
         )}
       </div>

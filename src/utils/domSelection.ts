@@ -23,12 +23,17 @@ export const getElementPath = (element: HTMLElement): number[] => {
  * Find an element in the DOM using a path of indices
  */
 export const getElementByPath = (path: number[]): HTMLElement | null => {
-  let current: HTMLElement = document.body;
+  let current: HTMLElement = document.documentElement;
 
-  for (const index of path) {
-    const children = Array.from(current.children) as HTMLElement[];
-    if (index >= children.length) return null;
-    current = children[index];
+  try {
+    for (const index of path) {
+      const children = Array.from(current.children) as HTMLElement[];
+      if (index >= children.length) return null;
+      current = children[index];
+    }
+  } catch (error) {
+    console.error(`[getElementByPath] ${path} is not a valid path`);
+    return null;
   }
 
   return current;
