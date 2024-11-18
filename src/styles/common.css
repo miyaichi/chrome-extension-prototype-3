@@ -1,0 +1,26 @@
+:root {
+  --primary-color: #3b82f6;
+  --text-color: #1f2937;
+  --border-color: #e5e7eb;
+  --bg-color-light: #f9fafb;
+  --bg-color-white: #ffffff;
+  --hover-color: #f3f4f6;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.card {
+  background-color: var(--bg-color-white);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-header {
+   padding: 14px;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+}
