@@ -4,8 +4,9 @@ import {
   useConnectionManager,
 } from "./lib/connectionManager";
 import {
+  DOM_SELECTION_EVENTS,
   SelectElementPayload,
-  SelectionModePayload,
+  SelectionModePayload
 } from "./types/domSelection";
 import { createElementInfo, getElementByPath } from "./utils/domSelection";
 
@@ -100,13 +101,24 @@ subscribe("TOGGLE_SELECTION_MODE", (message: Message<SelectionModePayload>) => {
   }
 });
 
-subscribe("SELECT_ELEMENT", (message: Message<SelectElementPayload>) => {
-  const element = getElementByPath(message.payload.elementInfo.path);
-  if (!element) return;
+subscribe<SelectElementPayload>(
+  DOM_SELECTION_EVENTS.SELECT_ELEMENT, 
+  (message: Message<SelectElementPayload>) => {
+    console.log("SELECT_ELEMENT elementInfo", message.payload.elementInfo);
+    console.log("SELECT_ELEMENT elementInfo.path", message.payload.elementInfo.path);
+    
+    const element = getElementByPath(message.payload.elementInfo.path);
+    
+    if (!element) {
+      console.warn("Failed to find element with path:", message.payload.elementInfo.path);
+      return;
+    }
 
-  saveElementStyle(element);
-  applyHighlightStyle(element);
-});
+    console.log("SELECT_ELEMENT element found:", element);
+    saveElementStyle(element);
+    applyHighlightStyle(element);
+  }
+);
 
 subscribe("CLEAR_SELECTION", () => {
   restoreElementStyle();

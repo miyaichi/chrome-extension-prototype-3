@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useConnectionManager } from "../lib/connectionManager";
 import "../styles/common.css";
-import { DOM_SELECTION_EVENTS, ElementInfo } from "../types/domSelection";
+import { DOM_SELECTION_EVENTS, ElementInfo, SelectElementPayload } from "../types/domSelection";
 import "./DOMSelector.css";
 import { DOMTreeView } from "./DOMTreeView";
 
@@ -11,13 +11,8 @@ export const DOMSelector: React.FC = () => {
   );
   const { subscribe, sendMessage } = useConnectionManager();
 
-  const handleElementSelect = (node: ElementInfo) => {
-    const elementInfo = {
-      startTag: node.startTag,
-      path: node.path,
-      tree: node.children.length > 0 ? node.children : undefined,
-    };
-    sendMessage(DOM_SELECTION_EVENTS.SELECT_ELEMENT, { elementInfo });
+  const handleElementSelect = (elementInfo: ElementInfo) => {
+    sendMessage<SelectElementPayload>(DOM_SELECTION_EVENTS.SELECT_ELEMENT, { elementInfo });
   };
 
   useEffect(() => {
@@ -56,7 +51,6 @@ export const DOMSelector: React.FC = () => {
             <div className="selected-element-info">
               <h3>Selected Element:</h3>
               <div>Path: {selectedElement.path.join(" > ")}</div>
-              <div>Start Tag: {selectedElement.startTag}</div>
             </div>
             {selectedElement.children && (
               <DOMTreeView
