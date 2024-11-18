@@ -1,17 +1,17 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
 import React, { useState } from "react";
-import { ElementInfo, ElementTreeNode } from "../types/domSelection";
+import { ElementInfo } from "../types/domSelection";
+import { truncateStartTag } from "../utils/domSelection";
 import "./DOMTreeView.css";
 import { Tooltip } from "./Tooltip";
 
 interface Props {
   elementInfo: ElementInfo;
-  onSelect?: (node: ElementTreeNode) => void;
+  onSelect?: (node: ElementInfo) => void;
 }
 
 const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
-  const MAX_TAG_LENGTH = 20;
 
   const toggleNode = (path: string) => {
     setExpandedNodes((prev) =>
@@ -19,13 +19,7 @@ const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
     );
   };
 
-  const truncateStartTag = (tag: string) => {
-    return tag.length > MAX_TAG_LENGTH
-      ? `${tag.slice(0, MAX_TAG_LENGTH)}...`
-      : tag;
-  };
-
-  const renderNode = (node: ElementTreeNode, parentPath = "") => {
+  const renderNode = (node: ElementInfo, parentPath = "") => {
     const currentPath = parentPath
       ? `${parentPath}-${node.path.join(".")}`
       : node.path.join(".");

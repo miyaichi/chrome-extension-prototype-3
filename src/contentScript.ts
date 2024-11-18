@@ -1,17 +1,14 @@
-// src/contentScript.ts
 import {
   ConnectionManager,
   Message,
   useConnectionManager,
 } from "./lib/connectionManager";
 import {
-  ElementInfo,
-  ElementTreeNode,
   SelectElementPayload,
   SelectionModePayload,
 } from "./types/domSelection";
+import { createElementInfo, getElementByPath } from "./utils/domSelection";
 
-// Define specific CSS properties we'll work with
 type StyleProperty = "backgroundColor" | "outline" | "border";
 
 interface ElementStyle {
@@ -19,7 +16,6 @@ interface ElementStyle {
   element: HTMLElement;
 }
 
-// Maintain styles per tab
 const styleMap = new Map<number, ElementStyle>();
 let currentTabId: number;
 let selectionModeEnabled = false;
@@ -28,81 +24,16 @@ const { sendMessage, subscribe } = useConnectionManager();
 const manager = ConnectionManager.getInstance();
 manager.setContext("content");
 
-// Get current tab ID
 chrome.runtime.sendMessage({ type: "GET_CURRENT_TAB" }, (response) => {
   currentTabId = response.tabId;
 });
 
-// Selection mode cursor style
 const updateCursorStyle = (enabled: boolean) => {
   document.body.style.cursor = enabled ? "crosshair" : "";
 };
 
-// Helper function to get element path
-const getElementPath = (element: HTMLElement): number[] => {
-  const path: number[] = [];
-  let current = element;
-
-  while (current.parentElement) {
-    const parent = current.parentElement;
-    const children = Array.from(parent.children);
-    const index = children.indexOf(current);
-    path.unshift(index);
-    current = parent;
-  }
-
-  return path;
-};
-
-// Helper function to get element by path
-const getElementByPath = (path: number[]): HTMLElement | null => {
-  let current: HTMLElement = document.body;
-
-  for (const index of path) {
-    const children = Array.from(current.children) as HTMLElement[];
-    if (index >= children.length) return null;
-    current = children[index];
-  }
-
-  return current;
-};
-
-// Helper function to get element start tag
-const getElementStartTag = (element: HTMLElement): string => {
-  const clone = element.cloneNode(false) as HTMLElement;
-  return clone.outerHTML.split(">")[0] + ">";
-};
-
-// Helper function to build element tree
-const buildElementTree = (element: HTMLElement, currentPath: number[] = []): ElementTreeNode => {
-  const children = Array.from(element.children).map((child, index) => {
-    const childPath = [...currentPath, index];
-    return buildElementTree(child as HTMLElement, childPath);
-  });
-
-  const node: ElementTreeNode = {
-    startTag: getElementStartTag(element),
-    children,
-    path: currentPath
-  };
-
-  const textContent = Array.from(element.childNodes)
-    .filter(node => node.nodeType === Node.TEXT_NODE)
-    .map(node => node.textContent?.trim())
-    .filter(text => text)
-    .join(' ');
-
-  if (textContent) {
-    node.text = textContent;
-  }
-
-  return node;
-};
-
-// Style management functions
 const saveElementStyle = (element: HTMLElement): void => {
   if (styleMap.has(currentTabId)) {
-    // Restore previous element's style before saving new one
     restoreElementStyle();
   }
 
@@ -143,9 +74,7 @@ const restoreElementStyle = (): void => {
   styleMap.delete(currentTabId);
 };
 
-// Click handler
 const handleElementClick = (event: MouseEvent): void => {
-  // If selection mode is disabled, do nothing
   if (!selectionModeEnabled) return;
 
   const element = event.target as HTMLElement;
@@ -154,34 +83,23 @@ const handleElementClick = (event: MouseEvent): void => {
   event.preventDefault();
   event.stopPropagation();
 
-  const path = getElementPath(element);
-  const elementTree = buildElementTree(element, path);
+  const elementInfo = createElementInfo(element);
 
-  // Save element info
-  const elementInfo: ElementInfo = {
-    startTag: getElementStartTag(element),
-    path,
-    children: elementTree,
-  };
-
-  // Save element style and apply highlight
   saveElementStyle(element);
   applyHighlightStyle(element);
 
   sendMessage("ELEMENT_SELECTED", { elementInfo });
 };
 
-// Subscribe to selection mode toggle
 subscribe("TOGGLE_SELECTION_MODE", (message: Message<SelectionModePayload>) => {
   selectionModeEnabled = message.payload.enabled;
   updateCursorStyle(selectionModeEnabled);
 
   if (!selectionModeEnabled) {
-    restoreElementStyle(); // Clear any selected elements when disabling
+    restoreElementStyle();
   }
 });
 
-// Subscribe to element selection messages from other components
 subscribe("SELECT_ELEMENT", (message: Message<SelectElementPayload>) => {
   const element = getElementByPath(message.payload.elementInfo.path);
   if (!element) return;
@@ -190,20 +108,16 @@ subscribe("SELECT_ELEMENT", (message: Message<SelectElementPayload>) => {
   applyHighlightStyle(element);
 });
 
-// Subscribe to clear selection messages
 subscribe("CLEAR_SELECTION", () => {
   restoreElementStyle();
   sendMessage("ELEMENT_UNSELECTED", { timestamp: Date.now() });
 });
 
-// Initialize event listeners
 document.addEventListener("click", handleElementClick, true);
 
-// Cleanup on unload
 window.addEventListener("unload", () => {
   restoreElementStyle();
   document.removeEventListener("click", handleElementClick, true);
 });
 
-// Send content ready message
 sendMessage("CONTENT_READY", { url: window.location.href });
