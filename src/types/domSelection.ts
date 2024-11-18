@@ -8,8 +8,6 @@ export interface ElementTreeNode {
   children: ElementTreeNode[];
   /** Array of indices representing the path from root to this element */
   path: number[];
-  /** Text content directly within this element, if any exists */
-  text?: string;
 }
 
 /** Information about a selected DOM element */
