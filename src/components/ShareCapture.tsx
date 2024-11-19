@@ -11,7 +11,12 @@ import { formatElementTag } from "./utils/htmlTagFormatter";
 
 interface ShareCaptureProps {
   onClose: () => void;
-  onShare: (comment: string, imageData: string) => void;
+  onShare: (
+    imageData: string,
+    comment: string,
+    url: string,
+    startTag: string,
+  ) => void;
   initialSelectedElement: ElementInfo | null;
 }
 
@@ -94,7 +99,14 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
 
   const handleShare = () => {
     if (imageDataUrl) {
-      onShare(comment, imageDataUrl);
+      if (captureInfo.captureUrl && captureInfo.selectedElement?.startTag) {
+        onShare(
+          imageDataUrl,
+          comment,
+          captureInfo.captureUrl,
+          captureInfo.selectedElement.startTag,
+        );
+      }
       setImageDataUrl(undefined);
       setComment("");
       setCaptureInfo({
