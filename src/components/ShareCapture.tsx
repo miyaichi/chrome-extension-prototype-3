@@ -134,18 +134,15 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
           className="capture-comment"
         />
 
-        {captureInfo.selectedElement && (
+        {captureInfo.captureUrl && (
           <div className="element-info">
-            <p>
-              Selected Element Path:{" "}
-              {captureInfo.selectedElement.path.join(" > ")}
-            </p>
+            <p>URL: {captureInfo.captureUrl}</p>
           </div>
         )}
 
-        {captureInfo.captureUrl && (
+        {captureInfo.selectedElement && (
           <div className="element-info">
-            <p>Captured URL: {captureInfo.captureUrl}</p>
+            <p>Element Path: {captureInfo.selectedElement.path.join(" > ")}</p>
           </div>
         )}
 
