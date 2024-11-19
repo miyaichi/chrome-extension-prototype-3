@@ -15,6 +15,8 @@ Prototype of a chrome extension using side panel.
 │   │   ├── DOMSelector.tsx      # DOM selector
 │   │   ├── SettingPanel.css
 │   │   ├── SettingPanel.tsx     # Setting panel
+│   │   ├── ShareCapture.css
+│   │   ├── ShareCapture.tsx     # Share Screen Capture
 │   │   ├── TagInjection.css
 │   │   └── TagInjection.tsx     # Tag injection
 │   ├── contentScript.ts         # Content script
