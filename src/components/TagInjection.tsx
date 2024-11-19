@@ -1,7 +1,7 @@
 // src/components/TagInjection.tsx
-import React from 'react';
-import '../styles/common.css';
-import './TagInjection.css';
+import React from "react";
+import "../styles/common.css";
+import "./TagInjection.css";
 
 export const TagInjection: React.FC = () => {
   return (

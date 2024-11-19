@@ -1,6 +1,6 @@
+import { ChevronUp } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useConnectionManager } from "../lib/connectionManager";
-import "../styles/common.css";
 import {
   DOM_SELECTION_EVENTS,
   ElementInfo,
@@ -16,13 +16,27 @@ export const DOMSelector: React.FC = () => {
   const { subscribe, sendMessage } = useConnectionManager();
 
   const handleElementSelect = (elementInfo: ElementInfo) => {
+    const path: number[] = elementInfo.path;
     sendMessage<SelectElementPayload>(DOM_SELECTION_EVENTS.SELECT_ELEMENT, {
-      elementInfo,
+      path,
     });
   };
 
+  const handleParentSelect = () => {
+    if (!selectedElement) return;
+    if (selectedElement.path.length === 0) return;
+
+    const parentPath = selectedElement.path.slice(0, -1);
+    sendMessage<SelectElementPayload>(DOM_SELECTION_EVENTS.SELECT_ELEMENT, {
+      path: parentPath,
+    });
+  };
+
+  const hasParentElement = (element: ElementInfo) => {
+    return element.path.length > 0;
+  };
+
   useEffect(() => {
-    // Subscribe to element selection
     const unsubscribeSelection = subscribe(
       DOM_SELECTION_EVENTS.ELEMENT_SELECTED,
       (message: { payload: { elementInfo: ElementInfo } }) => {
@@ -31,7 +45,6 @@ export const DOMSelector: React.FC = () => {
       },
     );
 
-    // Subscribe to clear selection
     const unsubscribeUnselection = subscribe(
       DOM_SELECTION_EVENTS.ELEMENT_UNSELECTED,
       () => {
@@ -39,7 +52,6 @@ export const DOMSelector: React.FC = () => {
       },
     );
 
-    // Cleanup both subscriptions
     return () => {
       unsubscribeSelection();
       unsubscribeUnselection();
@@ -55,8 +67,21 @@ export const DOMSelector: React.FC = () => {
         {selectedElement && (
           <>
             <div className="selected-element-info">
-              <h3>Selected Element:</h3>
-              <div>Path: {selectedElement.path.join(" > ")}</div>
+              <div className="element-header">
+                <h3>Selected Element:</h3>
+                {hasParentElement(selectedElement) && (
+                  <button
+                    onClick={handleParentSelect}
+                    className="parent-nav-button"
+                    title="Go to parent element"
+                  >
+                    <ChevronUp size={16} />
+                  </button>
+                )}
+              </div>
+              <div className="element-path">
+                {selectedElement.path.join(" > ")}
+              </div>
             </div>
             <DOMTreeView
               elementInfo={selectedElement}

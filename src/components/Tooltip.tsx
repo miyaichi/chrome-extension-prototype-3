@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import './Tooltip.css';
+import React, { useEffect, useRef, useState } from "react";
+import "./Tooltip.css";
 
 interface TooltipProps {
   content: string;
@@ -26,7 +26,7 @@ export const Tooltip = ({ content, children }: TooltipProps) => {
   }, [isVisible]);
 
   return (
-    <div 
+    <div
       ref={targetRef}
       className="tooltip-container"
       onMouseEnter={() => setIsVisible(true)}

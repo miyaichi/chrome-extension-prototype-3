@@ -1,7 +1,6 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
 import React, { useState } from "react";
 import { ElementInfo } from "../types/domSelection";
-import { truncateStartTag } from "../utils/domSelection";
 import "./DOMTreeView.css";
 import { Tooltip } from "./Tooltip";
 
@@ -9,6 +8,54 @@ interface Props {
   elementInfo: ElementInfo;
   onSelect?: (node: ElementInfo) => void;
 }
+
+const truncateAttributeValue = (value: string, maxLength: number = 25) => {
+  if (value.length <= maxLength) return value;
+  return `${value.substring(0, maxLength)}...`;
+};
+
+const formatElementTag = (
+  startTag: string,
+  showFullContent: boolean = false,
+) => {
+  const tagMatch = startTag.match(/^<(\w+)([\s\S]*?)(\/?>)$/);
+  if (!tagMatch) return startTag;
+
+  const [, tagName, attributesStr, closing] = tagMatch;
+
+  const attributeParts: React.ReactNode[] = [];
+  let match;
+  const attrRegex = /\s+([^\s="]+)(?:(=")((?:\\"|[^"])*)")?/g;
+
+  while ((match = attrRegex.exec(attributesStr)) !== null) {
+    const [fullMatch, attrName, equals = "", attrValue = ""] = match;
+
+    attributeParts.push(
+      <React.Fragment key={attributeParts.length}>
+        <span className="syntax-punctuation"> </span>
+        <span className="syntax-attr">{attrName}</span>
+        {equals && (
+          <>
+            <span className="syntax-punctuation">="</span>
+            <span className="syntax-value" title={attrValue}>
+              {showFullContent ? attrValue : truncateAttributeValue(attrValue)}
+            </span>
+            <span className="syntax-punctuation">"</span>
+          </>
+        )}
+      </React.Fragment>,
+    );
+  }
+
+  return (
+    <>
+      <span className="syntax-punctuation">&lt;</span>
+      <span className="syntax-tag">{tagName}</span>
+      {attributeParts}
+      <span className="syntax-punctuation">{closing}</span>
+    </>
+  );
+};
 
 export const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
@@ -43,11 +90,13 @@ export const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
           ) : (
             <div className="tree-chevron-placeholder" />
           )}
-          <Tooltip content={node.startTag}>
-            <span className="tree-tag" onClick={() => onSelect?.(node)}>
-              {truncateStartTag(node.startTag)}
-            </span>
-          </Tooltip>
+          <div className="tree-tag-container">
+            <Tooltip content={node.startTag}>
+              <span className="tree-tag" onClick={() => onSelect?.(node)}>
+                {formatElementTag(node.startTag)}
+              </span>
+            </Tooltip>
+          </div>
         </div>
         {isExpanded && hasChildren && (
           <div className="tree-children">

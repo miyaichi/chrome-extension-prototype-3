@@ -10,7 +10,7 @@ export interface ElementInfo {
 
 /** Payload for element selection events */
 export interface SelectElementPayload {
-  elementInfo: ElementInfo;
+  path: number[];
 }
 
 /** Payload for selection mode toggle events */

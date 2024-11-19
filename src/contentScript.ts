@@ -104,12 +104,9 @@ subscribe("TOGGLE_SELECTION_MODE", (message: Message<SelectionModePayload>) => {
 subscribe<SelectElementPayload>(
   DOM_SELECTION_EVENTS.SELECT_ELEMENT,
   (message: Message<SelectElementPayload>) => {
-    const element = getElementByPath(message.payload.elementInfo.path);
+    const element = getElementByPath(message.payload.path);
     if (!element) {
-      console.warn(
-        "Failed to find element with path:",
-        message.payload.elementInfo.path,
-      );
+      console.warn("Failed to find element with path:", message.payload.path);
       return;
     }
 

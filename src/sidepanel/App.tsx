@@ -1,5 +1,4 @@
-// src/sidepanel/App.tsx
-import { Settings } from "lucide-react";
+import { Camera, Power, Settings } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { DOMSelector } from "../components/DOMSelector";
 import { SettingsPanel } from "../components/SettingsPanel";
@@ -9,7 +8,6 @@ import "../styles/common.css";
 import { DOM_SELECTION_EVENTS, UI_EVENTS } from "../types/domSelection";
 import "./App.css";
 
-// src/sidepanel/App.tsx
 export const App = () => {
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -70,17 +68,27 @@ export const App = () => {
     <div className="app-container">
       <div className="app-content">
         <div className="app-header">
-          <button onClick={toggleSelectionMode} className="text-button">
-            {isSelectionMode
-              ? "Disable Selection Mode"
-              : "Enable Selection Mode"}
-          </button>
           <button
-            onClick={() => setShowSettings(!showSettings)}
-            className={`settings-button ${showSettings ? "active" : ""}`}
+            onClick={toggleSelectionMode}
+            className={`selection-button ${
+              isSelectionMode ? "enabled" : "disabled"
+            }`}
           >
-            <Settings className="settings-icon" />
+            <Power size={16} />
+            {isSelectionMode ? "Selection Mode On" : "Selection Mode Off"}
           </button>
+
+          <div className="header-actions">
+            <button className="icon-button disabled">
+              <Camera size={16} />
+            </button>
+            <button
+              onClick={() => setShowSettings(!showSettings)}
+              className={`icon-button ${showSettings ? "active" : ""}`}
+            >
+              <Settings size={16} />
+            </button>
+          </div>
         </div>
 
         {showSettings ? (

@@ -1,5 +1,5 @@
 .app-container {
-  padding: 16px;
+  padding: 8px;
   background-color: var(--bg-color-light);
   min-height: 100vh;
 }
@@ -13,45 +13,108 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
-.settings-button {
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.icon-button {
   padding: 8px;
   border-radius: 9999px;
   cursor: pointer;
   border: none;
   background: none;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.settings-button:hover {
+.icon-button:hover {
   background-color: var(--hover-color);
 }
 
-.settings-icon {
-  width: 12px;
-  height: 12px;
-  color: var(--primary-color);
-}
-
-.settings-button.active .settings-icon {
+.icon-button.active {
   color: var(--border-color);
 }
 
-.components-container > *:not(:first-child) {
-  margin-top: 16px;
+.icon-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.text-button {
-  background: none;
-  border: 2px solid blue;
-  border-radius: 8px;
-  color: inherit;
-  font-size: inherit;
+.selection-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
   cursor: pointer;
-  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
-.text-button:hover {
-  border-color: darkblue;
+.selection-button.enabled {
+  background-color: #22c55e;
+  color: white;
+}
+
+.selection-button.enabled:hover {
+  background-color: #16a34a;
+}
+
+.selection-button.disabled {
+  background-color: #ef4444;
+  color: white;
+}
+
+.selection-button.disabled:hover {
+  background-color: #dc2626;
+}
+
+.components-container > *:not(:first-child) {
+  margin-top: 12px;
+}
+
+.card {
+  padding: 12px;
+  border-radius: 6px;
+  background-color: var(--bg-color-light);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+  margin-bottom: 8px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.card-content {
+  padding: 0 12px;
+}
+
+.selected-element-info {
+  margin-bottom: 8px;
+}
+
+.selected-element-info h3 {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.dom-tree {
+  padding-left: 0;
+  margin-left: 0;
+  margin-top: 8px;
 }
