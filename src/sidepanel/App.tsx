@@ -90,9 +90,15 @@ export const App = () => {
     setShowShareCapture(false);
   };
 
-  const handleShare = (comment: string, imageData: string) => {
+  const handleShare = (
+    imageData: string,
+    comment: string,
+    url: string,
+    startTag: string,
+  ) => {
+    console.log(`Sharing: ${comment} ${url} ${startTag}`);
     // TODO: Implement share functionality
-    console.log("Sharing capture with comment:", comment);
+
     setShowShareCapture(false);
   };
 

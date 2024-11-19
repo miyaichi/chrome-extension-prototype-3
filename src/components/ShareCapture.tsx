@@ -99,14 +99,11 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
 
   const handleShare = () => {
     if (imageDataUrl) {
-      if (captureInfo.captureUrl && captureInfo.selectedElement?.startTag) {
-        onShare(
-          imageDataUrl,
-          comment,
-          captureInfo.captureUrl,
-          captureInfo.selectedElement.startTag,
-        );
-      }
+      const imageData = imageDataUrl || "";
+      const url = captureInfo.captureUrl || "";
+      const startTag = captureInfo.selectedElement?.startTag || "";
+      onShare(imageData, comment, url, startTag);
+
       setImageDataUrl(undefined);
       setComment("");
       setCaptureInfo({
@@ -159,6 +156,7 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
             <p>
               {formatElementTag(captureInfo.selectedElement.startTag, {
                 showFullContent: true,
+                maxLength: 50,
               })}
             </p>
           </div>
