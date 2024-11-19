@@ -29,6 +29,8 @@ export const DOM_SELECTION_EVENTS = {
 
 export const UI_EVENTS = {
   SIDE_PANEL_CLOSED: "SIDE_PANEL_CLOSED",
+  CAPTURE_TAB: "CAPTURE_TAB",
+  CAPTURE_TAB_RESULT: "CAPTURE_TAB_RESULT",
 } as const;
 
 export type DOMSelectionEvent =

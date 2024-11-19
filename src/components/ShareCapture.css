@@ -1,0 +1,117 @@
+.capture-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  z-index: 1000;
+}
+
+.capture-container {
+  background-color: var(--bg-color-light);
+  border-radius: 8px;
+  padding: 16px;
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+.capture-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.capture-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.capture-close {
+  padding: 4px;
+  border: none;
+  background: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  border-radius: 9999px;
+}
+
+.capture-close:hover {
+  background-color: var(--hover-color);
+}
+
+.capture-preview {
+  margin-bottom: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.capture-image {
+  max-height: 300px;
+  width: 100%;
+  object-fit: contain;
+}
+
+.capture-comment {
+  width: 100%;
+  height: 120px;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-bottom: 16px;
+  resize: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.capture-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.share-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.share-button:hover {
+  background-color: var(--primary-color-dark);
+}
+
+.share-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.element-info {
+  margin-bottom: 16px;
+  padding: 8px;
+  background-color: var(--bg-color-light);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.element-info p {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: var(--text-color);
+}

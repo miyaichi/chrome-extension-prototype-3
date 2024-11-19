@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Message Monitor",
+  "name": "DOM Workbench",
   "version": "1.0",
-  "description": "Chrome Extension prototype with Side Panel",
-  "permissions": ["sidePanel", "tabs", "storage"],
+  "description": "Workbench for analyzing the DOM of the Active Tab.",
+  "permissions": ["sidePanel", "tabs", "storage", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
   },
@@ -17,6 +18,6 @@
     "default_path": "sidepanel.html"
   },
   "action": {
-    "default_title": "Open Message Monitor"
+    "default_title": "Open DOM Workbench"
   }
 }

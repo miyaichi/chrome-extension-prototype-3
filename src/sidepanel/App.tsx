@@ -2,6 +2,7 @@ import { Camera, Power, Settings } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { DOMSelector } from "../components/DOMSelector";
 import { SettingsPanel } from "../components/SettingsPanel";
+import { ShareCapture } from "../components/ShareCapture";
 import { TagInjection } from "../components/TagInjection";
 import { useConnectionManager } from "../lib/connectionManager";
 import "../styles/common.css";
@@ -11,6 +12,7 @@ import "./App.css";
 export const App = () => {
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showShareCapture, setShowShareCapture] = useState(false);
   const { sendMessage } = useConnectionManager();
 
   useEffect(() => {
@@ -51,6 +53,21 @@ export const App = () => {
     sendMessage(UI_EVENTS.SIDE_PANEL_CLOSED, { timestamp: Date.now() });
   };
 
+  const handleCapture = () => {
+    setShowShareCapture(true);
+    sendMessage(UI_EVENTS.CAPTURE_TAB, { timestamp: Date.now() });
+  };
+
+  const handleShareClose = () => {
+    setShowShareCapture(false);
+  };
+
+  const handleShare = (comment: string, imageData: string) => {
+    // TODO: Implement share functionality
+    console.log("Sharing capture with comment:", comment);
+    setShowShareCapture(false);
+  };
+
   const toggleSelectionMode = () => {
     const newMode = !isSelectionMode;
     if (!newMode) {
@@ -79,7 +96,7 @@ export const App = () => {
           </button>
 
           <div className="header-actions">
-            <button className="icon-button disabled">
+            <button onClick={handleCapture} className="icon-button">
               <Camera size={16} />
             </button>
             <button
@@ -96,6 +113,9 @@ export const App = () => {
         ) : (
           <div className="components-container">
             <DOMSelector />
+            {showShareCapture && (
+              <ShareCapture onClose={handleShareClose} onShare={handleShare} />
+            )}
             <TagInjection />
           </div>
         )}
