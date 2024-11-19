@@ -6,14 +6,21 @@ import { ShareCapture } from "../components/ShareCapture";
 import { TagInjection } from "../components/TagInjection";
 import { useConnectionManager } from "../lib/connectionManager";
 import "../styles/common.css";
-import { DOM_SELECTION_EVENTS, UI_EVENTS } from "../types/domSelection";
+import {
+  DOM_SELECTION_EVENTS,
+  ElementInfo,
+  UI_EVENTS,
+} from "../types/domSelection";
 import "./App.css";
 
 export const App = () => {
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showShareCapture, setShowShareCapture] = useState(false);
-  const { sendMessage } = useConnectionManager();
+  const [selectedElement, setSelectedElement] = useState<ElementInfo | null>(
+    null,
+  );
+  const { sendMessage, subscribe } = useConnectionManager();
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -34,6 +41,27 @@ export const App = () => {
       window.removeEventListener("unload", handleUnload);
     };
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = subscribe(
+      DOM_SELECTION_EVENTS.ELEMENT_SELECTED,
+      (message: { payload: { elementInfo: ElementInfo } }) => {
+        setSelectedElement(message.payload.elementInfo);
+      },
+    );
+
+    const unsubscribeUnselection = subscribe(
+      DOM_SELECTION_EVENTS.ELEMENT_UNSELECTED,
+      () => {
+        setSelectedElement(null);
+      },
+    );
+
+    return () => {
+      unsubscribe();
+      unsubscribeUnselection();
+    };
+  }, [subscribe]);
 
   const handlePanelClose = () => {
     if (isSelectionMode) {
@@ -114,7 +142,11 @@ export const App = () => {
           <div className="components-container">
             <DOMSelector />
             {showShareCapture && (
-              <ShareCapture onClose={handleShareClose} onShare={handleShare} />
+              <ShareCapture
+                onClose={handleShareClose}
+                onShare={handleShare}
+                initialSelectedElement={selectedElement}
+              />
             )}
             <TagInjection />
           </div>

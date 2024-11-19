@@ -11,6 +11,7 @@ import "./ShareCapture.css";
 interface ShareCaptureProps {
   onClose: () => void;
   onShare: (comment: string, imageData: string) => void;
+  initialSelectedElement: ElementInfo | null;
 }
 
 interface CaptureInfo {
@@ -21,11 +22,12 @@ interface CaptureInfo {
 export const ShareCapture: React.FC<ShareCaptureProps> = ({
   onClose,
   onShare,
+  initialSelectedElement,
 }) => {
   const [comment, setComment] = useState("");
   const [imageDataUrl, setImageDataUrl] = useState<string>();
   const [captureInfo, setCaptureInfo] = useState<CaptureInfo>({
-    selectedElement: null,
+    selectedElement: initialSelectedElement,
     captureUrl: null,
   });
   const { subscribe } = useConnectionManager();

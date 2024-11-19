@@ -12,17 +12,25 @@
 .capture-container {
   background-color: var(--bg-color-light);
   border-radius: 8px;
-  padding: 16px;
+  padding: 0 16px;
   width: 100%;
-  max-width: 32rem;
-  margin: 0 auto;
+  max-width: 48rem;
+  margin: auto;
+  position: relative;
 }
 
 .capture-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin: 0 -16px 16px -16px;
+  padding: 16px;
+  background-color: var(--bg-color-light);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .capture-title {
@@ -76,6 +84,13 @@
 .capture-actions {
   display: flex;
   justify-content: flex-end;
+  position: sticky;
+  bottom: 0;
+  margin: 0 -16px;
+  padding: 16px;
+  background-color: var(--bg-color-light);
+  z-index: 10;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .share-button {
@@ -99,19 +114,4 @@
 .share-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.element-info {
-  margin-bottom: 16px;
-  padding: 8px;
-  background-color: var(--bg-color-light);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.element-info p {
-  margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  color: var(--text-color);
 }
