@@ -7,6 +7,7 @@ import {
   UI_EVENTS,
 } from "../types/domSelection";
 import "./ShareCapture.css";
+import { formatElementTag } from "./utils/htmlTagFormatter";
 
 interface ShareCaptureProps {
   onClose: () => void;
@@ -136,13 +137,18 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
 
         {captureInfo.captureUrl && (
           <div className="element-info">
-            <p>URL: {captureInfo.captureUrl}</p>
+            <p>{captureInfo.captureUrl}</p>
           </div>
         )}
 
         {captureInfo.selectedElement && (
           <div className="element-info">
-            <p>Element Path: {captureInfo.selectedElement.path.join(" > ")}</p>
+            <p>[ {captureInfo.selectedElement.path.join(" > ")} ]</p>
+            <p>
+              {formatElementTag(captureInfo.selectedElement.startTag, {
+                showFullContent: true,
+              })}
+            </p>
           </div>
         )}
 

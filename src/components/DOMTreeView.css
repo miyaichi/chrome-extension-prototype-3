@@ -46,29 +46,6 @@
   text-decoration: underline;
 }
 
-/* 要素の色分け */
-.syntax-tag {
-  color: #2563eb; /* tag
-}
-
-.syntax-attr {
-  color: #059669; /* attribute */
-}
-
-.syntax-value {
-  color: #db2777; /* attribute value */
-  display: inline-block;
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: bottom;
-}
-
-.syntax-punctuation {
-  color: #4b5563; /* punctuation */
-}
-
 .tree-children {
   position: relative;
   padding-left: 0.75rem;
