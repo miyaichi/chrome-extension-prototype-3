@@ -11,6 +11,8 @@ Prototype of a chrome extension using side panel.
 ├── src/
 │   ├── background.ts            # Background script
 │   ├── components/
+│   ├── utils/                   # Component-specific utilities
+│   │   └── htmlTagFormatter.tsx # HTML tag formatting utility 
 │   │   ├── DOMSelector.css
 │   │   ├── DOMSelector.tsx      # DOM selector
 │   │   ├── SettingPanel.css
