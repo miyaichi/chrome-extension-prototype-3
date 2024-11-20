@@ -84,7 +84,7 @@ export const shareInPPT = async (
   comment: string,
   url: string,
   startTag: string,
-): Promise<void> => {
+): Promise<true> => {
   const logger = new Logger("shareInPPT");
 
   try {
@@ -151,6 +151,8 @@ export const shareInPPT = async (
     await downloadFile(pptxBlob, generateFilename(now, "pptx"), {
       saveAs: false,
     });
+
+    return true;
   } catch (error) {
     logger.error("PowerPoint generation and download failed:", error);
     throw error;

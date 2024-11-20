@@ -8,8 +8,10 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["dom", "es2020"],
     "jsx": "react",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", "assets/**/*"],
+  "exclude": ["node_modules"],
+  "files": ["custom.d.ts"]
 }

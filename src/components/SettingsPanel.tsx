@@ -1,6 +1,6 @@
 // src/components/SettingsPanel.tsx
 import React from "react";
-import { LogLevel, useSettings } from "../lib/settings";
+import { LogLevel, ShareFormat, useSettings } from "../lib/settings";
 import "../styles/common.css";
 import "./SettingsPanel.css";
 
@@ -49,6 +49,19 @@ export const SettingsPanel: React.FC = () => {
             <option value="warn">Warning</option>
             <option value="info">Info</option>
             <option value="debug">Debug</option>
+          </select>
+        </div>
+
+        <div className="setting-group">
+          <label>Share Format</label>
+          <select
+            value={settings.shareFormat}
+            onChange={(e) =>
+              updateSettings({ shareFormat: e.target.value as ShareFormat })
+            }
+          >
+            <option value="pdf">PDF</option>
+            <option value="ppt">PowerPoint</option>
           </select>
         </div>
       </div>

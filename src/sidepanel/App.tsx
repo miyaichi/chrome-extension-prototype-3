@@ -5,7 +5,6 @@ import { SettingsPanel } from "../components/SettingsPanel";
 import { ShareCapture } from "../components/ShareCapture";
 import { TagInjection } from "../components/TagInjection";
 import { useConnectionManager } from "../lib/connectionManager";
-import { shareInPPT } from "../lib/shareInPPT";
 import "../styles/common.css";
 import {
   DOM_SELECTION_EVENTS,
@@ -132,29 +131,12 @@ export const App = () => {
     };
   }, [currentTabId, isSelectionMode]);
 
-  const handlePanelClose = () => {
-    cleanup();
-  };
-
   const handleCapture = () => {
     setShowShareCapture(true);
     sendMessage(UI_EVENTS.CAPTURE_TAB, { timestamp: Date.now() });
   };
 
   const handleShareClose = () => {
-    setShowShareCapture(false);
-  };
-
-  const handleShare = (
-    imageData: string,
-    comment: string,
-    url: string,
-    startTag: string,
-  ) => {
-    console.log(`Sharing: ${url} ${startTag}`);
-    shareInPPT(imageData, comment, url, startTag);
-
-    // TODO: Implement share functionality
     setShowShareCapture(false);
   };
 
@@ -204,7 +186,6 @@ export const App = () => {
             {showShareCapture && (
               <ShareCapture
                 onClose={handleShareClose}
-                onShare={handleShare}
                 initialSelectedElement={selectedElement}
               />
             )}

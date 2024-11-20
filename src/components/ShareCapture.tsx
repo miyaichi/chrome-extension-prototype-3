@@ -1,6 +1,9 @@
 import { Send, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useConnectionManager } from "../lib/connectionManager";
+import { useSettings } from "../lib/settings";
+import { shareInPDF } from "../lib/shareInPDF";
+import { shareInPPT } from "../lib/shareInPPT";
 import {
   DOM_SELECTION_EVENTS,
   ElementInfo,
@@ -11,12 +14,6 @@ import { formatElementTag } from "./utils/htmlTagFormatter";
 
 interface ShareCaptureProps {
   onClose: () => void;
-  onShare: (
-    imageData: string,
-    comment: string,
-    url: string,
-    startTag: string,
-  ) => void;
   initialSelectedElement: ElementInfo | null;
 }
 
@@ -27,15 +24,16 @@ interface CaptureInfo {
 
 export const ShareCapture: React.FC<ShareCaptureProps> = ({
   onClose,
-  onShare,
   initialSelectedElement,
 }) => {
+  const { settings } = useSettings();
   const [comment, setComment] = useState("");
   const [imageDataUrl, setImageDataUrl] = useState<string>();
   const [captureInfo, setCaptureInfo] = useState<CaptureInfo>({
     selectedElement: initialSelectedElement,
     captureUrl: null,
   });
+  const [isLoading, setIsLoading] = useState(false);
   const { subscribe } = useConnectionManager();
 
   useEffect(() => {
@@ -97,12 +95,20 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
     onClose();
   };
 
-  const handleShare = () => {
-    if (imageDataUrl) {
+  const handleShare = async () => {
+    if (!imageDataUrl) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const shareFunction =
+        settings.shareFormat === "pdf" ? shareInPDF : shareInPPT;
       const imageData = imageDataUrl || "";
       const url = captureInfo.captureUrl || "";
       const startTag = captureInfo.selectedElement?.startTag || "";
-      onShare(imageData, comment, url, startTag);
+
+      await shareFunction(imageData, comment, url, startTag);
 
       setImageDataUrl(undefined);
       setComment("");
@@ -110,6 +116,10 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
         selectedElement: null,
         captureUrl: null,
       });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -169,7 +179,9 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
             disabled={!imageDataUrl}
           >
             <Send size={16} />
-            Share
+            {isLoading
+              ? "Sharing..."
+              : `Share as ${settings.shareFormat.toUpperCase()}`}
           </button>
         </div>
       </div>

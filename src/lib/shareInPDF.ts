@@ -1,3 +1,4 @@
+import fontBytes from "@assets/fonts/NotoSansJP-Regular.otf";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { downloadFile } from "../utils/download";
@@ -41,21 +42,13 @@ const TEXT_CONFIG: TextConfig = {
   maxWidth: PAGE_CONFIG.WIDTH - 100, // margin * 2
 };
 
-const JAPANESE_FONT_URL =
-  "https://fonts.gstatic.com/ea/notosansjapanese/v6/NotoSansJP-Regular.otf";
-
 // Initialize fonts
 const initializeFonts = async (pdfDoc: PDFDocument): Promise<FontConfig> => {
   // Register fontkit
   pdfDoc.registerFontkit(fontkit);
 
-  // Fetch and embed the Japanese font
-  const fontBytes = await fetch(JAPANESE_FONT_URL).then((res) =>
-    res.arrayBuffer(),
-  );
-
   return {
-    japanese: await pdfDoc.embedFont(fontBytes, { subset: true }),
+    japanese: await pdfDoc.embedFont(fontBytes, { subset: false }),
     fallback: await pdfDoc.embedFont(StandardFonts.Helvetica),
   };
 };
@@ -157,7 +150,7 @@ export const shareInPDF = async (
   comment: string,
   url: string,
   startTag: string,
-): Promise<void> => {
+): Promise<true> => {
   const logger = new Logger("ShareInPDF");
 
   try {
@@ -177,7 +170,7 @@ export const shareInPDF = async (
     // Add text to the page
     drawText(
       secondPage,
-      "取得日時:",
+      "Date and Time:",
       TEXT_CONFIG.margin,
       yOffset,
       TEXT_CONFIG.titleFontSize,
@@ -224,7 +217,7 @@ export const shareInPDF = async (
 
     drawText(
       secondPage,
-      "開始タグ:",
+      "Element Start Tag:",
       TEXT_CONFIG.margin,
       yOffset,
       TEXT_CONFIG.titleFontSize,
@@ -252,7 +245,7 @@ export const shareInPDF = async (
 
     drawText(
       secondPage,
-      "コメント:",
+      "Comment:",
       TEXT_CONFIG.margin,
       yOffset,
       TEXT_CONFIG.titleFontSize,
@@ -288,6 +281,8 @@ export const shareInPDF = async (
     await downloadFile(pdfBlob, generateFilename(now, "pdf"), {
       saveAs: false,
     });
+
+    return true;
   } catch (error) {
     logger.error("PDF generation and download failed:", error);
     throw error;

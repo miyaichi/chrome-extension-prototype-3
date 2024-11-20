@@ -1,4 +1,3 @@
-// webpack.config.js
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -26,10 +25,22 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
+      {
+        test: /\.(otf|ttf|woff|woff2)$/,
+        type: 'asset/inline',
+        generator: {
+          dataUrl: content => {
+            return content.toString('base64');
+          }
+        }
+      }
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      '@assets': path.resolve(__dirname, 'assets')
+    }
   },
   plugins: [
     new CopyPlugin({

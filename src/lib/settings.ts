@@ -2,13 +2,16 @@
 import { useEffect, useState } from "react";
 
 export type LogLevel = "error" | "warn" | "info" | "debug";
+export type ShareFormat = "pdf" | "ppt";
 
 export interface Settings {
   logLevel: LogLevel;
+  shareFormat: ShareFormat;
 }
 
 export const defaultSettings: Settings = {
   logLevel: "info",
+  shareFormat: "ppt",
 };
 
 export const loadSettings = async (): Promise<Settings> => {
