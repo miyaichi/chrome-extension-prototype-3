@@ -43,6 +43,8 @@ npm run build
 ## Directory Structure
 
 ```
+├── asset/
+|   ├── fonts/                   # Fonts
 ├── dist/                        # Compiled files (git ignored)
 ├── node_modules/                # Node modules (git ignored)
 ├── public/
@@ -77,10 +79,15 @@ npm run build
 │       ├── domSelection.ts      # DOM selection utility
 │       ├── download.ts          # Download utility
 │       └── formatter.ts         # Formatter utility
+├── .gitignore                   # Git ignore
+├── .prettierrc.js               # Prettier configuration
+├── custom.d.ts                  # Custom type definitions
+├── LICENSE                      # License
 ├── manifest.json                # Chrome extension manifest
 ├── package-lock.json            # NPM lock file
 ├── package.json                 # NPM configuration
 ├── postcss.config.js            # PostCSS configuration
+├── README.md                    # Readme
 ├── tsconfig.json                # TypeScript configuration
 └── webpack.config.js            # Webpack configuration
 ```

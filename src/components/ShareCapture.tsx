@@ -1,16 +1,12 @@
-import { Send, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { useConnectionManager } from "../lib/connectionManager";
-import { useSettings } from "../lib/settings";
-import { shareInPDF } from "../lib/shareInPDF";
-import { shareInPPT } from "../lib/shareInPPT";
-import {
-  DOM_SELECTION_EVENTS,
-  ElementInfo,
-  UI_EVENTS,
-} from "../types/domSelection";
-import "./ShareCapture.css";
-import { formatElementTag } from "./utils/htmlTagFormatter";
+import { Send, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useConnectionManager } from '../lib/connectionManager';
+import { useSettings } from '../lib/settings';
+import { shareInPDF } from '../lib/shareInPDF';
+import { shareInPPT } from '../lib/shareInPPT';
+import { DOM_SELECTION_EVENTS, ElementInfo, UI_EVENTS } from '../types/domSelection';
+import './ShareCapture.css';
+import { formatElementTag } from './utils/htmlTagFormatter';
 
 interface ShareCaptureProps {
   onClose: () => void;
@@ -22,12 +18,9 @@ interface CaptureInfo {
   captureUrl: string | null;
 }
 
-export const ShareCapture: React.FC<ShareCaptureProps> = ({
-  onClose,
-  initialSelectedElement,
-}) => {
+export const ShareCapture: React.FC<ShareCaptureProps> = ({ onClose, initialSelectedElement }) => {
   const { settings } = useSettings();
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState('');
   const [imageDataUrl, setImageDataUrl] = useState<string>();
   const [captureInfo, setCaptureInfo] = useState<CaptureInfo>({
     selectedElement: initialSelectedElement,
@@ -37,26 +30,23 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
   const { subscribe } = useConnectionManager();
 
   useEffect(() => {
-    const unsubscribeCapture = subscribe(
-      UI_EVENTS.CAPTURE_TAB_RESULT,
-      (message) => {
-        const payload = message.payload as {
-          success: boolean;
-          imageDataUrl?: string;
-          error?: string;
-          url?: string;
-        };
-        if (payload.success) {
-          setImageDataUrl(payload.imageDataUrl);
-          setCaptureInfo((prev) => ({
-            ...prev,
-            captureUrl: payload.url || null,
-          }));
-        } else {
-          console.error("Capture failed:", payload.error);
-        }
-      },
-    );
+    const unsubscribeCapture = subscribe(UI_EVENTS.CAPTURE_TAB_RESULT, (message) => {
+      const payload = message.payload as {
+        success: boolean;
+        imageDataUrl?: string;
+        error?: string;
+        url?: string;
+      };
+      if (payload.success) {
+        setImageDataUrl(payload.imageDataUrl);
+        setCaptureInfo((prev) => ({
+          ...prev,
+          captureUrl: payload.url || null,
+        }));
+      } else {
+        console.error('Capture failed:', payload.error);
+      }
+    });
 
     const unsubscribeSelection = subscribe(
       DOM_SELECTION_EVENTS.ELEMENT_SELECTED,
@@ -65,18 +55,15 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
           ...prev,
           selectedElement: message.payload.elementInfo,
         }));
-      },
+      }
     );
 
-    const unsubscribeUnselection = subscribe(
-      DOM_SELECTION_EVENTS.ELEMENT_UNSELECTED,
-      () => {
-        setCaptureInfo((prev) => ({
-          ...prev,
-          selectedElement: null,
-        }));
-      },
-    );
+    const unsubscribeUnselection = subscribe(DOM_SELECTION_EVENTS.ELEMENT_UNSELECTED, () => {
+      setCaptureInfo((prev) => ({
+        ...prev,
+        selectedElement: null,
+      }));
+    });
 
     return () => {
       unsubscribeCapture();
@@ -87,7 +74,7 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
 
   const handleClose = () => {
     setImageDataUrl(undefined);
-    setComment("");
+    setComment('');
     setCaptureInfo({
       selectedElement: null,
       captureUrl: null,
@@ -102,16 +89,15 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
 
     setIsLoading(true);
     try {
-      const shareFunction =
-        settings.shareFormat === "pdf" ? shareInPDF : shareInPPT;
-      const imageData = imageDataUrl || "";
-      const url = captureInfo.captureUrl || "";
-      const startTag = captureInfo.selectedElement?.startTag || "";
+      const shareFunction = settings.shareFormat === 'pdf' ? shareInPDF : shareInPPT;
+      const imageData = imageDataUrl || '';
+      const url = captureInfo.captureUrl || '';
+      const startTag = captureInfo.selectedElement?.startTag || '';
 
       await shareFunction(imageData, comment, url, startTag);
 
       setImageDataUrl(undefined);
-      setComment("");
+      setComment('');
       setCaptureInfo({
         selectedElement: null,
         captureUrl: null,
@@ -135,11 +121,7 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
 
         {imageDataUrl ? (
           <div className="capture-preview">
-            <img
-              src={imageDataUrl}
-              alt="Screen Capture"
-              className="capture-image"
-            />
+            <img src={imageDataUrl} alt="Screen Capture" className="capture-image" />
           </div>
         ) : (
           <div className="capture-preview">
@@ -162,7 +144,7 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
 
         {captureInfo.selectedElement && (
           <div className="element-info">
-            <p>[ {captureInfo.selectedElement.path.join(" > ")} ]</p>
+            <p>[ {captureInfo.selectedElement.path.join(' > ')} ]</p>
             <p>
               {formatElementTag(captureInfo.selectedElement.startTag, {
                 showFullContent: true,
@@ -173,15 +155,9 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({
         )}
 
         <div className="capture-actions">
-          <button
-            onClick={handleShare}
-            className="share-button"
-            disabled={!imageDataUrl}
-          >
+          <button onClick={handleShare} className="share-button" disabled={!imageDataUrl}>
             <Send size={16} />
-            {isLoading
-              ? "Sharing..."
-              : `Share as ${settings.shareFormat.toUpperCase()}`}
+            {isLoading ? 'Sharing...' : `Share as ${settings.shareFormat.toUpperCase()}`}
           </button>
         </div>
       </div>

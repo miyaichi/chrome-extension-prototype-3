@@ -1,9 +1,9 @@
-import fontBytes from "@assets/fonts/NotoSansJP-Regular.otf";
-import fontkit from "@pdf-lib/fontkit";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
-import { downloadFile } from "../utils/download";
-import { formatTimestamp, generateFilename } from "../utils/formatters";
-import { Logger } from "./logger";
+import fontBytes from '@assets/fonts/NotoSansJP-Regular.otf';
+import fontkit from '@pdf-lib/fontkit';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import { downloadFile } from '../utils/download';
+import { formatTimestamp, generateFilename } from '../utils/formatters';
+import { Logger } from './logger';
 
 // Type definitions
 type ImageDimensions = {
@@ -26,7 +26,7 @@ type TextConfig = {
   maxWidth: number;
 };
 
-// constant values
+// Constant values
 const PAGE_CONFIG = {
   WIDTH: 595.28, // A4 width : 210mm x 297mm (points)
   HEIGHT: 841.89, // A4 height : 210mm x 297mm (points)
@@ -44,7 +44,6 @@ const TEXT_CONFIG: TextConfig = {
 
 // Initialize fonts
 const initializeFonts = async (pdfDoc: PDFDocument): Promise<FontConfig> => {
-  // Register fontkit
   pdfDoc.registerFontkit(fontkit);
 
   return {
@@ -53,17 +52,15 @@ const initializeFonts = async (pdfDoc: PDFDocument): Promise<FontConfig> => {
   };
 };
 
-// Image processing function
+// Image processing and scaling
 const processImage = async (
   pdfDoc: PDFDocument,
-  imageData: string,
+  imageData: string
 ): Promise<{
   image: any;
   dimensions: ImageDimensions;
 }> => {
-  const imageBytes = Uint8Array.from(atob(imageData.split(",")[1]), (c) =>
-    c.charCodeAt(0),
-  );
+  const imageBytes = Uint8Array.from(atob(imageData.split(',')[1]), (c) => c.charCodeAt(0));
   const image = await pdfDoc.embedPng(imageBytes);
   const imageDims = image.scale(1);
 
@@ -88,13 +85,8 @@ const processImage = async (
   };
 };
 
-// Text wrapping function
-const wrapText = (
-  text: string,
-  font: any,
-  maxWidth: number,
-  fontSize: number,
-): string[] => {
+// Text wrapping
+const wrapText = (text: string, font: any, maxWidth: number, fontSize: number): string[] => {
   const lines: string[] = [];
   let remainingText = text;
 
@@ -102,8 +94,7 @@ const wrapText = (
     let lineLength = remainingText.length;
     while (
       lineLength > 0 &&
-      font.widthOfTextAtSize(remainingText.substring(0, lineLength), fontSize) >
-        maxWidth
+      font.widthOfTextAtSize(remainingText.substring(0, lineLength), fontSize) > maxWidth
     ) {
       lineLength--;
     }
@@ -123,7 +114,7 @@ const drawText = (
   x: number,
   y: number,
   size: number,
-  fonts: FontConfig,
+  fonts: FontConfig
 ): void => {
   try {
     page.drawText(text, {
@@ -134,7 +125,7 @@ const drawText = (
       color: rgb(0, 0, 0),
     });
   } catch (e) {
-    console.warn("Falling back to standard font for:", text);
+    console.warn('Falling back to standard font for:', text);
     page.drawText(text, {
       x,
       y,
@@ -149,9 +140,9 @@ export const shareInPDF = async (
   imageData: string,
   comment: string,
   url: string,
-  startTag: string,
+  startTag: string
 ): Promise<true> => {
-  const logger = new Logger("ShareInPDF");
+  const logger = new Logger('ShareInPDF');
 
   try {
     const pdfDoc = await PDFDocument.create();
@@ -170,11 +161,11 @@ export const shareInPDF = async (
     // Add text to the page
     drawText(
       secondPage,
-      "Date and time:",
+      'Date and time:',
       TEXT_CONFIG.margin,
       yOffset,
       TEXT_CONFIG.titleFontSize,
-      fonts,
+      fonts
     );
     yOffset -= TEXT_CONFIG.lineHeight;
     drawText(
@@ -183,90 +174,50 @@ export const shareInPDF = async (
       TEXT_CONFIG.margin,
       yOffset,
       TEXT_CONFIG.fontSize,
-      fonts,
+      fonts
     );
     yOffset -= TEXT_CONFIG.lineHeight * 2;
 
-    drawText(
-      secondPage,
-      "URL:",
-      TEXT_CONFIG.margin,
-      yOffset,
-      TEXT_CONFIG.titleFontSize,
-      fonts,
-    );
+    drawText(secondPage, 'URL:', TEXT_CONFIG.margin, yOffset, TEXT_CONFIG.titleFontSize, fonts);
     yOffset -= TEXT_CONFIG.lineHeight;
-    const urlLines = wrapText(
-      url,
-      fonts.japanese,
-      TEXT_CONFIG.maxWidth,
-      TEXT_CONFIG.fontSize,
-    );
+    const urlLines = wrapText(url, fonts.japanese, TEXT_CONFIG.maxWidth, TEXT_CONFIG.fontSize);
     for (const line of urlLines) {
-      drawText(
-        secondPage,
-        line,
-        TEXT_CONFIG.margin,
-        yOffset,
-        TEXT_CONFIG.fontSize,
-        fonts,
-      );
+      drawText(secondPage, line, TEXT_CONFIG.margin, yOffset, TEXT_CONFIG.fontSize, fonts);
       yOffset -= TEXT_CONFIG.lineHeight;
     }
     yOffset -= TEXT_CONFIG.lineHeight;
 
     drawText(
       secondPage,
-      "Element start tag:",
+      'Element start tag:',
       TEXT_CONFIG.margin,
       yOffset,
       TEXT_CONFIG.titleFontSize,
-      fonts,
+      fonts
     );
     yOffset -= TEXT_CONFIG.lineHeight;
     const startTagLines = wrapText(
       startTag,
       fonts.japanese,
       TEXT_CONFIG.maxWidth,
-      TEXT_CONFIG.fontSize,
+      TEXT_CONFIG.fontSize
     );
     for (const line of startTagLines) {
-      drawText(
-        secondPage,
-        line,
-        TEXT_CONFIG.margin,
-        yOffset,
-        TEXT_CONFIG.fontSize,
-        fonts,
-      );
+      drawText(secondPage, line, TEXT_CONFIG.margin, yOffset, TEXT_CONFIG.fontSize, fonts);
       yOffset -= TEXT_CONFIG.lineHeight;
     }
     yOffset -= TEXT_CONFIG.lineHeight;
 
-    drawText(
-      secondPage,
-      "Comment:",
-      TEXT_CONFIG.margin,
-      yOffset,
-      TEXT_CONFIG.titleFontSize,
-      fonts,
-    );
+    drawText(secondPage, 'Comment:', TEXT_CONFIG.margin, yOffset, TEXT_CONFIG.titleFontSize, fonts);
     yOffset -= TEXT_CONFIG.lineHeight;
     const commentLines = wrapText(
       comment,
       fonts.japanese,
       TEXT_CONFIG.maxWidth,
-      TEXT_CONFIG.fontSize,
+      TEXT_CONFIG.fontSize
     );
     for (const line of commentLines) {
-      drawText(
-        secondPage,
-        line,
-        TEXT_CONFIG.margin,
-        yOffset,
-        TEXT_CONFIG.fontSize,
-        fonts,
-      );
+      drawText(secondPage, line, TEXT_CONFIG.margin, yOffset, TEXT_CONFIG.fontSize, fonts);
       yOffset -= TEXT_CONFIG.lineHeight;
     }
 
@@ -277,14 +228,14 @@ export const shareInPDF = async (
     });
 
     // Execute the download
-    const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
-    await downloadFile(pdfBlob, generateFilename(now, "pdf"), {
+    const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+    await downloadFile(pdfBlob, generateFilename(now, 'pdf'), {
       saveAs: false,
     });
 
     return true;
   } catch (error) {
-    logger.error("PDF generation and download failed:", error);
+    logger.error('PDF generation and download failed:', error);
     throw error;
   }
 };

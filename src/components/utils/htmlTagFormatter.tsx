@@ -1,5 +1,5 @@
 // src/components/utils/htmlTagFormatter.ts
-import React from "react";
+import React from 'react';
 
 // Syntax highlighting styles
 const defaultStyles = `
@@ -28,12 +28,12 @@ const defaultStyles = `
 
 // Inject the default styles into the document head
 const injectStyles = () => {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
-  const styleId = "html-tag-formatter-styles";
+  const styleId = 'html-tag-formatter-styles';
   if (document.getElementById(styleId)) return;
 
-  const styleElement = document.createElement("style");
+  const styleElement = document.createElement('style');
   styleElement.id = styleId;
   styleElement.textContent = defaultStyles;
   document.head.appendChild(styleElement);
@@ -51,31 +51,24 @@ export interface HTMLTagFormatterOptions {
 }
 
 const DEFAULT_CLASSES = {
-  tag: "syntax-tag",
-  attr: "syntax-attr",
-  value: "syntax-value",
-  punctuation: "syntax-punctuation",
+  tag: 'syntax-tag',
+  attr: 'syntax-attr',
+  value: 'syntax-value',
+  punctuation: 'syntax-punctuation',
 } as const;
 
-export const truncateAttributeValue = (
-  value: string,
-  maxLength: number = 25,
-) => {
+export const truncateAttributeValue = (value: string, maxLength: number = 25) => {
   if (value.length <= maxLength) return value;
   return `${value.substring(0, maxLength)}...`;
 };
 
 export const formatElementTag = (
   startTag: string,
-  options: HTMLTagFormatterOptions = {},
+  options: HTMLTagFormatterOptions = {}
 ): React.ReactNode => {
   injectStyles();
 
-  const {
-    showFullContent = false,
-    maxLength = 25,
-    classNames = DEFAULT_CLASSES,
-  } = options;
+  const { showFullContent = false, maxLength = 25, classNames = DEFAULT_CLASSES } = options;
 
   const tagMatch = startTag.match(/^<(\w+)([\s\S]*?)(\/?>)$/);
   if (!tagMatch) return startTag;
@@ -91,7 +84,7 @@ export const formatElementTag = (
   const attrRegex = /\s+([^\s="]+)(?:(=")((?:\\"|[^"])*)")?/g;
 
   while ((match = attrRegex.exec(attributesStr)) !== null) {
-    const [fullMatch, attrName, equals = "", attrValue = ""] = match;
+    const [fullMatch, attrName, equals = '', attrValue = ''] = match;
 
     attributeParts.push(
       <React.Fragment key={attributeParts.length}>
@@ -101,14 +94,12 @@ export const formatElementTag = (
           <>
             <span className={punctuation}>="</span>
             <span className={value} title={attrValue}>
-              {showFullContent
-                ? attrValue
-                : truncateAttributeValue(attrValue, maxLength)}
+              {showFullContent ? attrValue : truncateAttributeValue(attrValue, maxLength)}
             </span>
             <span className={punctuation}>"</span>
           </>
         )}
-      </React.Fragment>,
+      </React.Fragment>
     );
   }
 

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import "./Tooltip.css";
+import React, { useEffect, useRef, useState } from 'react';
+import './Tooltip.css';
 
 interface TooltipProps {
   content: string;

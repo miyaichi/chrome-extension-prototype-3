@@ -14,7 +14,7 @@
 }
 
 .setting-group select,
-.setting-group input[type="number"] {
+.setting-group input[type='number'] {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ddd;
@@ -34,6 +34,6 @@
   font-weight: normal;
 }
 
-.checkbox-group input[type="checkbox"] {
+.checkbox-group input[type='checkbox'] {
   margin: 0;
 }

@@ -1,8 +1,8 @@
 // src/components/SettingsPanel.tsx
-import React from "react";
-import { LogLevel, ShareFormat, useSettings } from "../lib/settings";
-import "../styles/common.css";
-import "./SettingsPanel.css";
+import React from 'react';
+import { LogLevel, ShareFormat, useSettings } from '../lib/settings';
+import '../styles/common.css';
+import './SettingsPanel.css';
 
 export const SettingsPanel: React.FC = () => {
   const { settings, updateSettings, loading, error } = useSettings();
@@ -13,9 +13,7 @@ export const SettingsPanel: React.FC = () => {
         <div className="card-header">
           <h2 className="card-title">Settings Error</h2>
         </div>
-        <div className="card-content error-message">
-          Failed to load settings: {error}
-        </div>
+        <div className="card-content error-message">Failed to load settings: {error}</div>
       </div>
     );
   }
@@ -41,9 +39,7 @@ export const SettingsPanel: React.FC = () => {
           <label>Log Level</label>
           <select
             value={settings.logLevel}
-            onChange={(e) =>
-              updateSettings({ logLevel: e.target.value as LogLevel })
-            }
+            onChange={(e) => updateSettings({ logLevel: e.target.value as LogLevel })}
           >
             <option value="error">Error</option>
             <option value="warn">Warning</option>
@@ -56,9 +52,7 @@ export const SettingsPanel: React.FC = () => {
           <label>Share Format</label>
           <select
             value={settings.shareFormat}
-            onChange={(e) =>
-              updateSettings({ shareFormat: e.target.value as ShareFormat })
-            }
+            onChange={(e) => updateSettings({ shareFormat: e.target.value as ShareFormat })}
           >
             <option value="pdf">PDF</option>
             <option value="ppt">PowerPoint</option>

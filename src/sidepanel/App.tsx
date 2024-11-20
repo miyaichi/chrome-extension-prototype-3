@@ -1,29 +1,23 @@
-import { Camera, Power, Settings } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { DOMSelector } from "../components/DOMSelector";
-import { SettingsPanel } from "../components/SettingsPanel";
-import { ShareCapture } from "../components/ShareCapture";
-import { TagInjection } from "../components/TagInjection";
-import { useConnectionManager } from "../lib/connectionManager";
-import "../styles/common.css";
-import {
-  DOM_SELECTION_EVENTS,
-  ElementInfo,
-  UI_EVENTS,
-} from "../types/domSelection";
-import "./App.css";
+import { Camera, Power, Settings } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { DOMSelector } from '../components/DOMSelector';
+import { SettingsPanel } from '../components/SettingsPanel';
+import { ShareCapture } from '../components/ShareCapture';
+import { TagInjection } from '../components/TagInjection';
+import { useConnectionManager } from '../lib/connectionManager';
+import '../styles/common.css';
+import { DOM_SELECTION_EVENTS, ElementInfo, UI_EVENTS } from '../types/domSelection';
+import './App.css';
 
 export const App = () => {
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showShareCapture, setShowShareCapture] = useState(false);
-  const [selectedElement, setSelectedElement] = useState<ElementInfo | null>(
-    null,
-  );
+  const [selectedElement, setSelectedElement] = useState<ElementInfo | null>(null);
   const { sendMessage, subscribe } = useConnectionManager();
   const [currentTabId, setCurrentTabId] = useState<number | null>(null);
 
-  // Cleanup function
+  // Cleanup
   const cleanup = () => {
     if (isSelectionMode) {
       setIsSelectionMode(false);
@@ -79,14 +73,14 @@ export const App = () => {
       }
     };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // Monitor connection to the Chrome extension
-    const port = chrome.runtime.connect({ name: "sidepanel" });
+    const port = chrome.runtime.connect({ name: 'sidepanel' });
     port.onDisconnect.addListener(cleanup);
 
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       port.disconnect();
     };
   }, [isSelectionMode, showSettings]);
@@ -97,15 +91,12 @@ export const App = () => {
       DOM_SELECTION_EVENTS.ELEMENT_SELECTED,
       (message: { payload: { elementInfo: ElementInfo } }) => {
         setSelectedElement(message.payload.elementInfo);
-      },
+      }
     );
 
-    const unsubscribeUnselection = subscribe(
-      DOM_SELECTION_EVENTS.ELEMENT_UNSELECTED,
-      () => {
-        setSelectedElement(null);
-      },
-    );
+    const unsubscribeUnselection = subscribe(DOM_SELECTION_EVENTS.ELEMENT_UNSELECTED, () => {
+      setSelectedElement(null);
+    });
 
     return () => {
       unsubscribe();
@@ -115,10 +106,7 @@ export const App = () => {
 
   // Monitor URL change
   useEffect(() => {
-    const handleUrlChange = (
-      tabId: number,
-      changeInfo: chrome.tabs.TabChangeInfo,
-    ) => {
+    const handleUrlChange = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
       if (currentTabId === tabId && changeInfo.url && isSelectionMode) {
         cleanup();
       }
@@ -159,10 +147,10 @@ export const App = () => {
         <div className="app-header">
           <button
             onClick={toggleSelectionMode}
-            className={`selection-button ${isSelectionMode ? "enabled" : "disabled"}`}
+            className={`selection-button ${isSelectionMode ? 'enabled' : 'disabled'}`}
           >
             <Power size={16} />
-            {isSelectionMode ? "Selection Mode On" : "Selection Mode Off"}
+            {isSelectionMode ? 'Selection Mode On' : 'Selection Mode Off'}
           </button>
 
           <div className="header-actions">
@@ -171,7 +159,7 @@ export const App = () => {
             </button>
             <button
               onClick={() => setShowSettings(!showSettings)}
-              className={`icon-button ${showSettings ? "active" : ""}`}
+              className={`icon-button ${showSettings ? 'active' : ''}`}
             >
               <Settings size={16} />
             </button>
@@ -184,10 +172,7 @@ export const App = () => {
           <div className="components-container">
             <DOMSelector />
             {showShareCapture && (
-              <ShareCapture
-                onClose={handleShareClose}
-                initialSelectedElement={selectedElement}
-              />
+              <ShareCapture onClose={handleShareClose} initialSelectedElement={selectedElement} />
             )}
             <TagInjection />
           </div>

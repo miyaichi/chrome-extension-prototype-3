@@ -1,10 +1,10 @@
 // DOMTreeView.tsx
-import { ChevronDown, ChevronRight } from "lucide-react";
-import React, { useState } from "react";
-import { ElementInfo } from "../types/domSelection";
-import "./DOMTreeView.css";
-import { Tooltip } from "./Tooltip";
-import { formatElementTag } from "./utils/htmlTagFormatter";
+import { ChevronDown, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ElementInfo } from '../types/domSelection';
+import './DOMTreeView.css';
+import { Tooltip } from './Tooltip';
+import { formatElementTag } from './utils/htmlTagFormatter';
 
 interface Props {
   elementInfo: ElementInfo;
@@ -16,14 +16,12 @@ export const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
 
   const toggleNode = (path: string) => {
     setExpandedNodes((prev) =>
-      prev.includes(path) ? prev.filter((p) => p !== path) : [...prev, path],
+      prev.includes(path) ? prev.filter((p) => p !== path) : [...prev, path]
     );
   };
 
-  const renderNode = (node: ElementInfo, parentPath = "") => {
-    const currentPath = parentPath
-      ? `${parentPath}-${node.path.join(".")}`
-      : node.path.join(".");
+  const renderNode = (node: ElementInfo, parentPath = '') => {
+    const currentPath = parentPath ? `${parentPath}-${node.path.join('.')}` : node.path.join('.');
     const isExpanded = expandedNodes.includes(currentPath);
     const hasChildren = node.children.length > 0;
 
@@ -31,15 +29,8 @@ export const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
       <div key={currentPath} className="tree-node">
         <div className="tree-node-content">
           {hasChildren ? (
-            <div
-              className="tree-chevron"
-              onClick={() => toggleNode(currentPath)}
-            >
-              {isExpanded ? (
-                <ChevronDown size={16} />
-              ) : (
-                <ChevronRight size={16} />
-              )}
+            <div className="tree-chevron" onClick={() => toggleNode(currentPath)}>
+              {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
             </div>
           ) : (
             <div className="tree-chevron-placeholder" />
@@ -62,8 +53,6 @@ export const DOMTreeView = ({ elementInfo, onSelect }: Props) => {
   };
 
   return (
-    <div className="tree-container">
-      {elementInfo.children.map((child) => renderNode(child))}
-    </div>
+    <div className="tree-container">{elementInfo.children.map((child) => renderNode(child))}</div>
   );
 };

@@ -1,8 +1,8 @@
 // src/lib/settings.ts
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-export type LogLevel = "error" | "warn" | "info" | "debug";
-export type ShareFormat = "pdf" | "ppt";
+export type LogLevel = 'error' | 'warn' | 'info' | 'debug';
+export type ShareFormat = 'pdf' | 'ppt';
 
 export interface Settings {
   logLevel: LogLevel;
@@ -10,39 +10,39 @@ export interface Settings {
 }
 
 export const defaultSettings: Settings = {
-  logLevel: "info",
-  shareFormat: "ppt",
+  logLevel: 'info',
+  shareFormat: 'ppt',
 };
 
 export const loadSettings = async (): Promise<Settings> => {
   if (!chrome.storage || !chrome.storage.sync) {
-    console.warn("Chrome storage API not available, using default settings");
+    console.warn('Chrome storage API not available, using default settings');
     return defaultSettings;
   }
 
   try {
-    const result = await chrome.storage.sync.get("settings");
+    const result = await chrome.storage.sync.get('settings');
     if (!result.settings) {
       await saveSettings(defaultSettings);
       return defaultSettings;
     }
     return result.settings as Settings;
   } catch (error) {
-    console.error("Failed to load settings:", error);
+    console.error('Failed to load settings:', error);
     return defaultSettings;
   }
 };
 
 export const saveSettings = async (settings: Settings): Promise<void> => {
   if (!chrome.storage || !chrome.storage.sync) {
-    console.warn("Chrome storage API not available, settings will not persist");
+    console.warn('Chrome storage API not available, settings will not persist');
     return;
   }
 
   try {
     await chrome.storage.sync.set({ settings });
   } catch (error) {
-    console.error("Failed to save settings:", error);
+    console.error('Failed to save settings:', error);
   }
 };
 
@@ -58,7 +58,7 @@ export const useSettings = () => {
         setSettings(savedSettings);
       } catch (err) {
         setError((err as Error).message);
-        console.error("Failed to initialize settings:", err);
+        console.error('Failed to initialize settings:', err);
       } finally {
         setLoading(false);
       }
@@ -66,9 +66,7 @@ export const useSettings = () => {
 
     initializeSettings();
 
-    const handleStorageChange = (changes: {
-      [key: string]: chrome.storage.StorageChange;
-    }) => {
+    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
       if (changes.settings?.newValue) {
         setSettings(changes.settings.newValue);
       }
@@ -92,7 +90,7 @@ export const useSettings = () => {
       setSettings(updatedSettings);
     } catch (err) {
       setError((err as Error).message);
-      console.error("Failed to update settings:", err);
+      console.error('Failed to update settings:', err);
     }
   };
 

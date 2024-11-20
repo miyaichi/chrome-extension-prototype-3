@@ -1,7 +1,7 @@
-import pptxgen from "pptxgenjs";
-import { downloadFile } from "../utils/download";
-import { formatTimestamp, generateFilename } from "../utils/formatters";
-import { Logger } from "./logger";
+import pptxgen from 'pptxgenjs';
+import { downloadFile } from '../utils/download';
+import { formatTimestamp, generateFilename } from '../utils/formatters';
+import { Logger } from './logger';
 
 // Type definitions
 type ImageDimensions = {
@@ -17,7 +17,7 @@ type SlideStyle = {
   spaceStyle: { text: string; options: { fontSize: number } };
 };
 
-// constant values
+// Constant values
 const SLIDE_CONFIG = {
   WIDTH: 10, // Slide width (inches)
   HEIGHT: 5.625, // Slide height (inches, 16:9 ratio)
@@ -27,15 +27,13 @@ const SLIDE_CONFIG = {
 };
 
 const SLIDE_STYLES: SlideStyle = {
-  titleStyle: { bold: true, fontSize: 14, color: "363636" },
-  contentStyle: { fontSize: 12, color: "666666", breakLine: true },
-  spaceStyle: { text: "\n", options: { fontSize: 8 } },
+  titleStyle: { bold: true, fontSize: 14, color: '363636' },
+  contentStyle: { fontSize: 12, color: '666666', breakLine: true },
+  spaceStyle: { text: '\n', options: { fontSize: 8 } },
 };
 
 // Get image dimensions based on the slide size
-async function getImageDimensions(
-  base64ImageData: string,
-): Promise<ImageDimensions> {
+const getImageDimensions = async (base64ImageData: string): Promise<ImageDimensions> => {
   const img = new Image();
   await new Promise((resolve, reject) => {
     img.onload = resolve;
@@ -65,34 +63,32 @@ async function getImageDimensions(
   const y = (SLIDE_CONFIG.HEIGHT - height) / 2;
 
   return { width, height, x, y };
-}
+};
 
 // Generate PowerPoint file from base64 data
-async function generatePPTX(
+const generatePPTX = async (
   pptxData: string,
-  mimeType: string = "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-): Promise<Blob> {
+  mimeType: string = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+): Promise<Blob> => {
   const byteCharacters = atob(pptxData);
-  const byteArray = new Uint8Array(
-    byteCharacters.split("").map((char) => char.charCodeAt(0)),
-  );
+  const byteArray = new Uint8Array(byteCharacters.split('').map((char) => char.charCodeAt(0)));
   return new Blob([byteArray], { type: mimeType });
-}
+};
 
 export const shareInPPT = async (
   imageData: string,
   comment: string,
   url: string,
-  startTag: string,
+  startTag: string
 ): Promise<true> => {
-  const logger = new Logger("shareInPPT");
+  const logger = new Logger('shareInPPT');
 
   try {
     const pres = new pptxgen();
-    pres.layout = "LAYOUT_16x9";
+    pres.layout = 'LAYOUT_16x9';
 
     // Prefix "data:image/" is required for pptxgenjs
-    const base64ImageData = imageData.startsWith("data:image/")
+    const base64ImageData = imageData.startsWith('data:image/')
       ? imageData
       : `data:image/png;base64,${imageData}`;
 
@@ -115,46 +111,46 @@ export const shareInPPT = async (
     // Add text to the slide
     slide2.addText(
       [
-        { text: "Date and time:", options: SLIDE_STYLES.titleStyle },
+        { text: 'Date and time:', options: SLIDE_STYLES.titleStyle },
         { text: timestamp, options: SLIDE_STYLES.contentStyle },
         SLIDE_STYLES.spaceStyle,
 
-        { text: "URL:", options: SLIDE_STYLES.titleStyle },
+        { text: 'URL:', options: SLIDE_STYLES.titleStyle },
         { text: url, options: SLIDE_STYLES.contentStyle },
         SLIDE_STYLES.spaceStyle,
 
-        { text: "Element start tag:", options: SLIDE_STYLES.titleStyle },
+        { text: 'Element start tag:', options: SLIDE_STYLES.titleStyle },
         { text: startTag, options: SLIDE_STYLES.contentStyle },
         SLIDE_STYLES.spaceStyle,
 
-        { text: "Comment:", options: SLIDE_STYLES.titleStyle },
+        { text: 'Comment:', options: SLIDE_STYLES.titleStyle },
         { text: comment, options: SLIDE_STYLES.contentStyle },
       ],
       {
         x: SLIDE_CONFIG.TEXT_MARGIN,
         y: SLIDE_CONFIG.TEXT_MARGIN,
-        w: "95%",
-        h: "90%",
-        valign: "top",
+        w: '95%',
+        h: '90%',
+        valign: 'top',
         margin: 10,
-      },
+      }
     );
 
     // Generate the PowerPoint file
-    const pptxOutput = await pres.write({ outputType: "base64" });
-    if (typeof pptxOutput !== "string") {
-      throw new Error("PowerPoint generation failed: Invalid output type");
+    const pptxOutput = await pres.write({ outputType: 'base64' });
+    if (typeof pptxOutput !== 'string') {
+      throw new Error('PowerPoint generation failed: Invalid output type');
     }
 
     // Execute download
     const pptxBlob = await generatePPTX(pptxOutput);
-    await downloadFile(pptxBlob, generateFilename(now, "pptx"), {
+    await downloadFile(pptxBlob, generateFilename(now, 'pptx'), {
       saveAs: false,
     });
 
     return true;
   } catch (error) {
-    logger.error("PowerPoint generation and download failed:", error);
+    logger.error('PowerPoint generation and download failed:', error);
     throw error;
   }
 };

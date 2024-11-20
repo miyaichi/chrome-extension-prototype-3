@@ -1,18 +1,12 @@
-import { ChevronUp } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { useConnectionManager } from "../lib/connectionManager";
-import {
-  DOM_SELECTION_EVENTS,
-  ElementInfo,
-  SelectElementPayload,
-} from "../types/domSelection";
-import "./DOMSelector.css";
-import { DOMTreeView } from "./DOMTreeView";
+import { ChevronUp } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useConnectionManager } from '../lib/connectionManager';
+import { DOM_SELECTION_EVENTS, ElementInfo, SelectElementPayload } from '../types/domSelection';
+import './DOMSelector.css';
+import { DOMTreeView } from './DOMTreeView';
 
 export const DOMSelector: React.FC = () => {
-  const [selectedElement, setSelectedElement] = useState<ElementInfo | null>(
-    null,
-  );
+  const [selectedElement, setSelectedElement] = useState<ElementInfo | null>(null);
   const { subscribe, sendMessage } = useConnectionManager();
 
   const handleElementSelect = (elementInfo: ElementInfo) => {
@@ -42,15 +36,12 @@ export const DOMSelector: React.FC = () => {
       (message: { payload: { elementInfo: ElementInfo } }) => {
         const elementInfo = message.payload.elementInfo;
         setSelectedElement(elementInfo);
-      },
+      }
     );
 
-    const unsubscribeUnselection = subscribe(
-      DOM_SELECTION_EVENTS.ELEMENT_UNSELECTED,
-      () => {
-        setSelectedElement(null);
-      },
-    );
+    const unsubscribeUnselection = subscribe(DOM_SELECTION_EVENTS.ELEMENT_UNSELECTED, () => {
+      setSelectedElement(null);
+    });
 
     return () => {
       unsubscribeSelection();
@@ -79,14 +70,9 @@ export const DOMSelector: React.FC = () => {
                   </button>
                 )}
               </div>
-              <div className="element-path">
-                {selectedElement.path.join(" > ")}
-              </div>
+              <div className="element-path">{selectedElement.path.join(' > ')}</div>
             </div>
-            <DOMTreeView
-              elementInfo={selectedElement}
-              onSelect={handleElementSelect}
-            />
+            <DOMTreeView elementInfo={selectedElement} onSelect={handleElementSelect} />
           </>
         )}
       </div>

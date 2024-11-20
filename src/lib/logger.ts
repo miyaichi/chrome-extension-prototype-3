@@ -1,5 +1,5 @@
 // src/lib/logger.ts
-import { LogLevel } from "./settings";
+import { LogLevel } from './settings';
 
 const LOG_LEVEL_PRIORITIES: Record<LogLevel, number> = {
   error: 0,
@@ -9,7 +9,7 @@ const LOG_LEVEL_PRIORITIES: Record<LogLevel, number> = {
 };
 
 export class Logger {
-  private static logLevel: LogLevel = "info";
+  private static logLevel: LogLevel = 'info';
 
   constructor(private context: string) {}
 
@@ -22,25 +22,25 @@ export class Logger {
   }
 
   debug(message: string, ...args: any[]) {
-    if (this.shouldLog("debug")) {
+    if (this.shouldLog('debug')) {
       console.debug(`[${this.context}] ${message}`, ...args);
     }
   }
 
   log(message: string, ...args: any[]) {
-    if (this.shouldLog("info")) {
+    if (this.shouldLog('info')) {
       console.log(`[${this.context}] ${message}`, ...args);
     }
   }
 
   warn(message: string, ...args: any[]) {
-    if (this.shouldLog("warn")) {
+    if (this.shouldLog('warn')) {
       console.warn(`[${this.context}] ${message}`, ...args);
     }
   }
 
   error(message: string, ...args: any[]) {
-    if (this.shouldLog("error")) {
+    if (this.shouldLog('error')) {
       console.error(`[${this.context}] ${message}`, ...args);
     }
   }

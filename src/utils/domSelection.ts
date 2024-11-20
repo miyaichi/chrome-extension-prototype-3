@@ -1,5 +1,5 @@
 // src/utils/domSelection.ts
-import { ElementInfo } from "../types/domSelection";
+import { ElementInfo } from '../types/domSelection';
 
 /**
  * Get the DOM path from root to the given element as an array of indices
@@ -44,7 +44,7 @@ export const getElementByPath = (path: number[]): HTMLElement | null => {
  */
 export const getElementStartTag = (element: HTMLElement): string => {
   const clone = element.cloneNode(false) as HTMLElement;
-  return clone.outerHTML.split(">")[0] + ">";
+  return clone.outerHTML.split('>')[0] + '>';
 };
 
 /**
@@ -59,7 +59,7 @@ export const truncateStartTag = (tag: string, maxLength = 20): string => {
  */
 export const buildElementTree = (
   element: HTMLElement,
-  currentPath: number[] = [],
+  currentPath: number[] = []
 ): ElementInfo[] => {
   const children = Array.from(element.children).flatMap((child, index) => {
     const childPath = [...currentPath, index];

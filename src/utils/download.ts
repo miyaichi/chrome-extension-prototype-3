@@ -1,10 +1,10 @@
 // src/utils/download.ts
 
-export async function downloadFile(
+export const downloadFile = async (
   blob: Blob,
   filename: string,
-  options: { saveAs?: boolean } = {},
-): Promise<void> {
+  options: { saveAs?: boolean } = {}
+): Promise<void> => {
   const downloadUrl = URL.createObjectURL(blob);
   try {
     await chrome.downloads.download({
@@ -16,4 +16,4 @@ export async function downloadFile(
     // Cleanup immediately after download starts
     setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
   }
-}
+};
