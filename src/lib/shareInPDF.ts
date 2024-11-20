@@ -170,7 +170,7 @@ export const shareInPDF = async (
     // Add text to the page
     drawText(
       secondPage,
-      "Date and Time:",
+      "Date and time:",
       TEXT_CONFIG.margin,
       yOffset,
       TEXT_CONFIG.titleFontSize,
@@ -217,7 +217,7 @@ export const shareInPDF = async (
 
     drawText(
       secondPage,
-      "Element Start Tag:",
+      "Element start tag:",
       TEXT_CONFIG.margin,
       yOffset,
       TEXT_CONFIG.titleFontSize,

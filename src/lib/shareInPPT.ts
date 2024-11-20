@@ -115,7 +115,7 @@ export const shareInPPT = async (
     // Add text to the slide
     slide2.addText(
       [
-        { text: "取得日時:", options: SLIDE_STYLES.titleStyle },
+        { text: "Date and time:", options: SLIDE_STYLES.titleStyle },
         { text: timestamp, options: SLIDE_STYLES.contentStyle },
         SLIDE_STYLES.spaceStyle,
 
@@ -123,11 +123,11 @@ export const shareInPPT = async (
         { text: url, options: SLIDE_STYLES.contentStyle },
         SLIDE_STYLES.spaceStyle,
 
-        { text: "開始タグ:", options: SLIDE_STYLES.titleStyle },
+        { text: "Element start tag:", options: SLIDE_STYLES.titleStyle },
         { text: startTag, options: SLIDE_STYLES.contentStyle },
         SLIDE_STYLES.spaceStyle,
 
-        { text: "コメント:", options: SLIDE_STYLES.titleStyle },
+        { text: "Comment:", options: SLIDE_STYLES.titleStyle },
         { text: comment, options: SLIDE_STYLES.contentStyle },
       ],
       {
