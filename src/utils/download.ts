@@ -5,13 +5,12 @@ export async function downloadFile(
   filename: string,
   options: { saveAs?: boolean } = {},
 ): Promise<void> {
-  console.log(`Downloading file: ${filename}`);
   const downloadUrl = URL.createObjectURL(blob);
   try {
     await chrome.downloads.download({
       url: downloadUrl,
       filename,
-      saveAs: options.saveAs ?? false,
+      saveAs: options.saveAs ?? false, // Save as dialog by default
     });
   } finally {
     // Cleanup immediately after download starts
