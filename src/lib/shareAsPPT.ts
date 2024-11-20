@@ -75,13 +75,13 @@ const generatePPTX = async (
   return new Blob([byteArray], { type: mimeType });
 };
 
-export const shareInPPT = async (
+export const shareAsPPT = async (
   imageData: string,
   comment: string,
   url: string,
   startTag: string
 ): Promise<true> => {
-  const logger = new Logger('shareInPPT');
+  const logger = new Logger('shareAsPPT');
 
   try {
     const pres = new pptxgen();

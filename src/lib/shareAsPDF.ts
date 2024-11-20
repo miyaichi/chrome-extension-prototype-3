@@ -136,13 +136,13 @@ const drawText = (
   }
 };
 
-export const shareInPDF = async (
+export const shareAsPDF = async (
   imageData: string,
   comment: string,
   url: string,
   startTag: string
 ): Promise<true> => {
-  const logger = new Logger('ShareInPDF');
+  const logger = new Logger('shareAsPDF');
 
   try {
     const pdfDoc = await PDFDocument.create();

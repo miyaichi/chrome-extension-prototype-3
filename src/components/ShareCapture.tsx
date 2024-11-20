@@ -2,8 +2,8 @@ import { Send, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useConnectionManager } from '../lib/connectionManager';
 import { useSettings } from '../lib/settings';
-import { shareInPDF } from '../lib/shareInPDF';
-import { shareInPPT } from '../lib/shareInPPT';
+import { shareAsPDF } from '../lib/shareAsPDF';
+import { shareAsPPT } from '../lib/shareAsPPT';
 import { DOM_SELECTION_EVENTS, ElementInfo, UI_EVENTS } from '../types/domSelection';
 import './ShareCapture.css';
 import { formatElementTag } from './utils/htmlTagFormatter';
@@ -89,7 +89,7 @@ export const ShareCapture: React.FC<ShareCaptureProps> = ({ onClose, initialSele
 
     setIsLoading(true);
     try {
-      const shareFunction = settings.shareFormat === 'pdf' ? shareInPDF : shareInPPT;
+      const shareFunction = settings.shareFormat === 'pdf' ? shareAsPDF : shareAsPPT;
       const imageData = imageDataUrl || '';
       const url = captureInfo.captureUrl || '';
       const startTag = captureInfo.selectedElement?.startTag || '';

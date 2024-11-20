@@ -67,8 +67,8 @@ npm run build
 │   │   ├── connectionManager.ts # Connection manager
 │   │   ├── logger.ts            # Logger
 │   │   ├── settings.ts          # Settings
-│   │   ├── shareInPDF.ts        # Share in PDF
-│   │   └── shareInPPT.ts        # Share in PPT
+│   │   ├── shareAsPDF.ts        # Share in PDF
+│   │   └── shareAsPPT.ts        # Share in PPT
 │   ├── sidepanel/
 │   │   ├── App.css
 │   │   ├── App.tsx              # Side panel
