@@ -11,8 +11,8 @@ Prototype of a chrome extension using side panel.
 ├── src/
 │   ├── background.ts            # Background script
 │   ├── components/
-│   ├── utils/                   # Component-specific utilities
-│   │   └── htmlTagFormatter.tsx # HTML tag formatting utility 
+│   │   ├── utils/               # Component-specific utilities
+│   │   │   └── htmlTagFormatter.tsx # HTML tag formatting utility 
 │   │   ├── DOMSelector.css
 │   │   ├── DOMSelector.tsx      # DOM selector
 │   │   ├── SettingPanel.css
@@ -25,13 +25,19 @@ Prototype of a chrome extension using side panel.
 │   ├── lib/
 │   │   ├── connectionManager.ts # Connection manager
 │   │   ├── logger.ts            # Logger
-│   │   └── settings.ts          # Settings
+│   │   ├── settings.ts          # Settings
+│   │   ├── shareInPDF.ts        # Share in PDF
+│   │   └── shareInPPT.ts        # Share in PPT
 │   ├── sidepanel/
 │   │   ├── App.css
 │   │   ├── App.tsx              # Side panel
 │   │   └── index.tsx
-│   └── styles/
-│       └── common.css           # Common styles
+│   ├── styles/
+│   │   └── common.css           # Common styles
+│   └── utils/                   # Utilities
+│       ├── domSelection.ts      # DOM selection utility
+│       ├── download.ts          # Download utility
+│       └── formatter.ts         # Formatter utility
 ├── manifest.json                # Chrome extension manifest
 ├── package-lock.json            # NPM lock file
 ├── package.json                 # NPM configuration
