@@ -25,10 +25,7 @@ const { sendMessage, subscribe } = useConnectionManager();
 const manager = ConnectionManager.getInstance();
 manager.setContext("content");
 
-chrome.runtime.sendMessage({ type: "GET_CURRENT_TAB" }, (response) => {
-  currentTabId = response.tabId;
-});
-
+// Utils
 const updateCursorStyle = (enabled: boolean) => {
   document.body.style.cursor = enabled ? "crosshair" : "";
 };
@@ -75,6 +72,7 @@ const restoreElementStyle = (): void => {
   styleMap.delete(currentTabId);
 };
 
+// Event handlers
 const handleElementClick = (event: MouseEvent): void => {
   if (!selectionModeEnabled) return;
 
@@ -92,6 +90,18 @@ const handleElementClick = (event: MouseEvent): void => {
   sendMessage("ELEMENT_SELECTED", { elementInfo });
 };
 
+// Cleanup
+const cleanup = () => {
+  restoreElementStyle();
+  document.removeEventListener("click", handleElementClick, true);
+};
+
+// Cleanup on disconnect
+chrome.runtime.onConnect.addListener((port) => {
+  port.onDisconnect.addListener(cleanup);
+});
+
+// Message subscription
 subscribe("TOGGLE_SELECTION_MODE", (message: Message<SelectionModePayload>) => {
   selectionModeEnabled = message.payload.enabled;
   updateCursorStyle(selectionModeEnabled);
@@ -124,11 +134,9 @@ subscribe("CLEAR_SELECTION", () => {
   sendMessage("ELEMENT_UNSELECTED", { timestamp: Date.now() });
 });
 
-document.addEventListener("click", handleElementClick, true);
-
-window.addEventListener("unload", () => {
-  restoreElementStyle();
-  document.removeEventListener("click", handleElementClick, true);
+// Initialize
+chrome.runtime.sendMessage({ type: "GET_CURRENT_TAB" }, (response) => {
+  currentTabId = response.tabId;
 });
 
-sendMessage("CONTENT_READY", { url: window.location.href });
+document.addEventListener("click", handleElementClick, true);

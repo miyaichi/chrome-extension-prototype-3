@@ -21,27 +21,77 @@ export const App = () => {
     null,
   );
   const { sendMessage, subscribe } = useConnectionManager();
+  const [currentTabId, setCurrentTabId] = useState<number | null>(null);
 
+  // Cleanup function
+  const cleanup = () => {
+    if (isSelectionMode) {
+      setIsSelectionMode(false);
+      sendMessage(DOM_SELECTION_EVENTS.TOGGLE_SELECTION_MODE, {
+        enabled: false,
+      });
+      sendMessage(DOM_SELECTION_EVENTS.CLEAR_SELECTION, {
+        timestamp: Date.now(),
+      });
+    }
+
+    if (showSettings) {
+      setShowSettings(false);
+    }
+
+    if (showShareCapture) {
+      setShowShareCapture(false);
+    }
+
+    sendMessage(UI_EVENTS.SIDE_PANEL_CLOSED, { timestamp: Date.now() });
+  };
+
+  // Get current tab ID
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        handlePanelClose();
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        setCurrentTabId(tabs[0].id);
+      }
+    });
+  }, []);
+
+  // Monitor tab change
+  useEffect(() => {
+    const handleTabChange = (activeInfo: chrome.tabs.TabActiveInfo) => {
+      if (currentTabId !== null && activeInfo.tabId !== currentTabId) {
+        cleanup();
+        setCurrentTabId(activeInfo.tabId);
       }
     };
 
-    const handleUnload = () => {
-      handlePanelClose();
+    chrome.tabs.onActivated.addListener(handleTabChange);
+
+    return () => {
+      chrome.tabs.onActivated.removeListener(handleTabChange);
+    };
+  }, [currentTabId, isSelectionMode]);
+
+  // Monitor visibility change
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        cleanup();
+      }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("unload", handleUnload);
+
+    // Monitor connection to the Chrome extension
+    const port = chrome.runtime.connect({ name: "sidepanel" });
+    port.onDisconnect.addListener(cleanup);
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("unload", handleUnload);
+      port.disconnect();
     };
-  }, []);
+  }, [isSelectionMode, showSettings]);
 
+  // Monitor element selection
   useEffect(() => {
     const unsubscribe = subscribe(
       DOM_SELECTION_EVENTS.ELEMENT_SELECTED,
@@ -63,22 +113,26 @@ export const App = () => {
     };
   }, [subscribe]);
 
+  // Monitor URL change
+  useEffect(() => {
+    const handleUrlChange = (
+      tabId: number,
+      changeInfo: chrome.tabs.TabChangeInfo,
+    ) => {
+      if (currentTabId === tabId && changeInfo.url && isSelectionMode) {
+        cleanup();
+      }
+    };
+
+    chrome.tabs.onUpdated.addListener(handleUrlChange);
+
+    return () => {
+      chrome.tabs.onUpdated.removeListener(handleUrlChange);
+    };
+  }, [currentTabId, isSelectionMode]);
+
   const handlePanelClose = () => {
-    if (isSelectionMode) {
-      setIsSelectionMode(false);
-      sendMessage(DOM_SELECTION_EVENTS.TOGGLE_SELECTION_MODE, {
-        enabled: false,
-      });
-      sendMessage(DOM_SELECTION_EVENTS.CLEAR_SELECTION, {
-        timestamp: Date.now(),
-      });
-    }
-
-    if (showSettings) {
-      setShowSettings(false);
-    }
-
-    sendMessage(UI_EVENTS.SIDE_PANEL_CLOSED, { timestamp: Date.now() });
+    cleanup();
   };
 
   const handleCapture = () => {
@@ -98,7 +152,6 @@ export const App = () => {
   ) => {
     console.log(`Sharing: ${comment} ${url} ${startTag}`);
     // TODO: Implement share functionality
-
     setShowShareCapture(false);
   };
 
@@ -121,9 +174,7 @@ export const App = () => {
         <div className="app-header">
           <button
             onClick={toggleSelectionMode}
-            className={`selection-button ${
-              isSelectionMode ? "enabled" : "disabled"
-            }`}
+            className={`selection-button ${isSelectionMode ? "enabled" : "disabled"}`}
           >
             <Power size={16} />
             {isSelectionMode ? "Selection Mode On" : "Selection Mode Off"}
