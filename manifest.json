@@ -3,7 +3,14 @@
   "name": "DOM Workbench",
   "version": "1.0",
   "description": "Workbench for analyzing the DOM of the Active Tab.",
-  "permissions": ["sidePanel", "tabs", "storage", "activeTab", "scripting"],
+  "permissions": [
+    "activeTab",
+    "downloads",
+    "scripting",
+    "sidePanel",
+    "storage",
+    "tabs"
+  ],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"

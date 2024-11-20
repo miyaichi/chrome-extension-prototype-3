@@ -5,6 +5,7 @@ import { SettingsPanel } from "../components/SettingsPanel";
 import { ShareCapture } from "../components/ShareCapture";
 import { TagInjection } from "../components/TagInjection";
 import { useConnectionManager } from "../lib/connectionManager";
+import { shareInPPT } from "../lib/shareInPPT";
 import "../styles/common.css";
 import {
   DOM_SELECTION_EVENTS,
@@ -150,7 +151,9 @@ export const App = () => {
     url: string,
     startTag: string,
   ) => {
-    console.log(`Sharing: ${comment} ${url} ${startTag}`);
+    console.log(`Sharing: ${url} ${startTag}`);
+    shareInPPT(imageData, comment, url, startTag);
+
     // TODO: Implement share functionality
     setShowShareCapture(false);
   };
